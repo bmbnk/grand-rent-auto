@@ -1,5 +1,5 @@
-import React from "react";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faAngleDown,
     faAngleUp,
@@ -25,31 +25,31 @@ import {
     Pagination,
     ButtonGroup
 } from '@themesberg/react-bootstrap';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import {Routes} from "../routes";
-import {pageVisits, pageTraffic, pageRanking} from "../data/tables";
+import { Routes } from "../routes";
+import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import cars from "../data/cars";
 import commands from "../data/commands";
 
-const ValueChange = ({value, suffix}) => {
+const ValueChange = ({ value, suffix }) => {
     const valueIcon = value < 0 ? faAngleDown : faAngleUp;
     const valueTxtColor = value < 0 ? "text-danger" : "text-success";
 
     return (
         value ? <span className={valueTxtColor}>
-      <FontAwesomeIcon icon={valueIcon}/>
-      <span className="fw-bold ms-1">
-        {Math.abs(value)}{suffix}
-      </span>
-    </span> : "--"
+            <FontAwesomeIcon icon={valueIcon} />
+            <span className="fw-bold ms-1">
+                {Math.abs(value)}{suffix}
+            </span>
+        </span> : "--"
     );
 };
 
 export const PageVisitsTable = () => {
     const TableRow = (props) => {
-        const {pageName, views, returnValue, bounceRate} = props;
+        const { pageName, views, returnValue, bounceRate } = props;
         const bounceIcon = bounceRate < 0 ? faArrowDown : faArrowUp;
         const bounceTxtColor = bounceRate < 0 ? "text-danger" : "text-success";
 
@@ -59,7 +59,7 @@ export const PageVisitsTable = () => {
                 <td>{views}</td>
                 <td>${returnValue}</td>
                 <td>
-                    <FontAwesomeIcon icon={bounceIcon} className={`${bounceTxtColor} me-3`}/>
+                    <FontAwesomeIcon icon={bounceIcon} className={`${bounceTxtColor} me-3`} />
                     {Math.abs(bounceRate)}%
                 </td>
             </tr>
@@ -80,15 +80,15 @@ export const PageVisitsTable = () => {
             </Card.Header>
             <Table responsive className="align-items-center table-flush">
                 <thead className="thead-light">
-                <tr>
-                    <th scope="col">Page name</th>
-                    <th scope="col">Page Views</th>
-                    <th scope="col">Page Value</th>
-                    <th scope="col">Bounce rate</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Page name</th>
+                        <th scope="col">Page Views</th>
+                        <th scope="col">Page Value</th>
+                        <th scope="col">Bounce rate</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {pageVisits.map(pv => <TableRow key={`page-visit-${pv.id}`} {...pv} />)}
+                    {pageVisits.map(pv => <TableRow key={`page-visit-${pv.id}`} {...pv} />)}
                 </tbody>
             </Table>
         </Card>
@@ -97,7 +97,7 @@ export const PageVisitsTable = () => {
 
 export const PageTrafficTable = () => {
     const TableRow = (props) => {
-        const {id, source, sourceIcon, sourceIconColor, sourceType, category, rank, trafficShare, change} = props;
+        const { id, source, sourceIcon, sourceIconColor, sourceType, category, rank, trafficShare, change } = props;
 
         return (
             <tr>
@@ -105,7 +105,7 @@ export const PageTrafficTable = () => {
                     <Card.Link href="#" className="text-primary fw-bold">{id}</Card.Link>
                 </td>
                 <td className="fw-bold">
-                    <FontAwesomeIcon icon={sourceIcon} className={`icon icon-xs text-${sourceIconColor} w-30`}/>
+                    <FontAwesomeIcon icon={sourceIcon} className={`icon icon-xs text-${sourceIconColor} w-30`} />
                     {source}
                 </td>
                 <td>{sourceType}</td>
@@ -118,12 +118,12 @@ export const PageTrafficTable = () => {
                         </Col>
                         <Col xs={12} xl={10} className="px-0 px-xl-1">
                             <ProgressBar variant="primary" className="progress-lg mb-0" now={trafficShare} min={0}
-                                         max={100}/>
+                                max={100} />
                         </Col>
                     </Row>
                 </td>
                 <td>
-                    <ValueChange value={change} suffix="%"/>
+                    <ValueChange value={change} suffix="%" />
                 </td>
             </tr>
         );
@@ -134,18 +134,18 @@ export const PageTrafficTable = () => {
             <Card.Body className="pb-0">
                 <Table responsive className="table-centered table-nowrap rounded mb-0">
                     <thead className="thead-light">
-                    <tr>
-                        <th className="border-0">#</th>
-                        <th className="border-0">Traffic Source</th>
-                        <th className="border-0">Source Type</th>
-                        <th className="border-0">Category</th>
-                        <th className="border-0">Global Rank</th>
-                        <th className="border-0">Traffic Share</th>
-                        <th className="border-0">Change</th>
-                    </tr>
+                        <tr>
+                            <th className="border-0">#</th>
+                            <th className="border-0">Traffic Source</th>
+                            <th className="border-0">Source Type</th>
+                            <th className="border-0">Category</th>
+                            <th className="border-0">Global Rank</th>
+                            <th className="border-0">Traffic Share</th>
+                            <th className="border-0">Change</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {pageTraffic.map(pt => <TableRow key={`page-traffic-${pt.id}`} {...pt} />)}
+                        {pageTraffic.map(pt => <TableRow key={`page-traffic-${pt.id}`} {...pt} />)}
                     </tbody>
                 </Table>
             </Card.Body>
@@ -170,7 +170,7 @@ export const RankingTable = () => {
             <tr>
                 <td className="border-0">
                     <Card.Link href="#" className="d-flex align-items-center">
-                        <Image src={countryImage} className="image-small rounded-circle me-2"/>
+                        <Image src={countryImage} className="image-small rounded-circle me-2" />
                         <div><span className="h6">{country}</span></div>
                     </Card.Link>
                 </td>
@@ -178,19 +178,19 @@ export const RankingTable = () => {
                     {overallRank ? overallRank : "-"}
                 </td>
                 <td className="border-0">
-                    <ValueChange value={overallRankChange}/>
+                    <ValueChange value={overallRankChange} />
                 </td>
                 <td className="fw-bold border-0">
                     {travelRank ? travelRank : "-"}
                 </td>
                 <td className="border-0">
-                    <ValueChange value={travelRankChange}/>
+                    <ValueChange value={travelRankChange} />
                 </td>
                 <td className="fw-bold border-0">
                     {widgetsRank ? widgetsRank : "-"}
                 </td>
                 <td className="border-0">
-                    <ValueChange value={widgetsRankChange}/>
+                    <ValueChange value={widgetsRankChange} />
                 </td>
             </tr>
         );
@@ -201,18 +201,18 @@ export const RankingTable = () => {
             <Card.Body className="pb-0">
                 <Table responsive className="table-centered table-nowrap rounded mb-0">
                     <thead className="thead-light">
-                    <tr>
-                        <th className="border-0">Country</th>
-                        <th className="border-0">All</th>
-                        <th className="border-0">All Change</th>
-                        <th className="border-0">Travel & Local</th>
-                        <th className="border-0">Travel & Local Change</th>
-                        <th className="border-0">Widgets</th>
-                        <th className="border-0">Widgets Change</th>
-                    </tr>
+                        <tr>
+                            <th className="border-0">Country</th>
+                            <th className="border-0">All</th>
+                            <th className="border-0">All Change</th>
+                            <th className="border-0">Travel & Local</th>
+                            <th className="border-0">Travel & Local Change</th>
+                            <th className="border-0">Widgets</th>
+                            <th className="border-0">Widgets Change</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {pageRanking.map(r => <TableRow key={`ranking-${r.id}`} {...r} />)}
+                        {pageRanking.map(r => <TableRow key={`ranking-${r.id}`} {...r} />)}
                     </tbody>
                 </Table>
             </Card.Body>
@@ -224,7 +224,7 @@ export const TransactionsTable = () => {
     const totalTransactions = transactions.length;
 
     const TableRow = (props) => {
-        const {invoiceNumber, subscription, price, issueDate, dueDate, status} = props;
+        const { invoiceNumber, subscription, price, issueDate, dueDate, status } = props;
         const statusVariant = status === "Paid" ? "success"
             : status === "Due" ? "warning"
                 : status === "Canceled" ? "danger" : "primary";
@@ -237,46 +237,46 @@ export const TransactionsTable = () => {
                     </Card.Link>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {subscription}
-          </span>
+                    <span className="fw-normal">
+                        {subscription}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {issueDate}
-          </span>
+                    <span className="fw-normal">
+                        {issueDate}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {dueDate}
-          </span>
+                    <span className="fw-normal">
+                        {dueDate}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            ${parseFloat(price).toFixed(2)}
-          </span>
+                    <span className="fw-normal">
+                        ${parseFloat(price).toFixed(2)}
+                    </span>
                 </td>
                 <td>
-          <span className={`fw-normal text-${statusVariant}`}>
-            {status}
-          </span>
+                    <span className={`fw-normal text-${statusVariant}`}>
+                        {status}
+                    </span>
                 </td>
                 <td>
                     <Dropdown as={ButtonGroup}>
                         <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
-              <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark"/>
-              </span>
+                            <span className="icon icon-sm">
+                                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                            </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             <Dropdown.Item>
-                                <FontAwesomeIcon icon={faEye} className="me-2"/> View Details
+                                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item>
-                                <FontAwesomeIcon icon={faEdit} className="me-2"/> Edit
+                                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
                             <Dropdown.Item className="text-danger">
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2"/> Remove
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
@@ -290,18 +290,18 @@ export const TransactionsTable = () => {
             <Card.Body className="pt-0">
                 <Table hover className="user-table align-items-center">
                     <thead>
-                    <tr>
-                        <th className="border-bottom">#</th>
-                        <th className="border-bottom">Bill For</th>
-                        <th className="border-bottom">Issue Date</th>
-                        <th className="border-bottom">Due Date</th>
-                        <th className="border-bottom">Total</th>
-                        <th className="border-bottom">Status</th>
-                        <th className="border-bottom">Action</th>
-                    </tr>
+                        <tr>
+                            <th className="border-bottom">#</th>
+                            <th className="border-bottom">Bill For</th>
+                            <th className="border-bottom">Issue Date</th>
+                            <th className="border-bottom">Due Date</th>
+                            <th className="border-bottom">Total</th>
+                            <th className="border-bottom">Status</th>
+                            <th className="border-bottom">Action</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {transactions.map(t => <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />)}
+                        {transactions.map(t => <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />)}
                     </tbody>
                 </Table>
                 <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
@@ -331,14 +331,14 @@ export const TransactionsTable = () => {
 
 export const CommandsTable = () => {
     const TableRow = (props) => {
-        const {name, usage = [], description, link} = props;
+        const { name, usage = [], description, link } = props;
 
         return (
             <tr>
-                <td className="border-0" style={{width: '5%'}}>
+                <td className="border-0" style={{ width: '5%' }}>
                     <code>{name}</code>
                 </td>
-                <td className="fw-bold border-0" style={{width: '5%'}}>
+                <td className="fw-bold border-0" style={{ width: '5%' }}>
                     <ul className="ps-0">
                         {usage.map(u => (
                             <ol key={u} className="ps-0">
@@ -347,12 +347,12 @@ export const CommandsTable = () => {
                         ))}
                     </ul>
                 </td>
-                <td className="border-0" style={{width: '50%'}}>
+                <td className="border-0" style={{ width: '50%' }}>
                     <pre className="m-0 p-0">{description}</pre>
                 </td>
-                <td className="border-0" style={{width: '40%'}}>
+                <td className="border-0" style={{ width: '40%' }}>
                     <pre><Card.Link href={link} target="_blank">Read More <FontAwesomeIcon icon={faExternalLinkAlt}
-                                                                                           className="ms-1"/></Card.Link></pre>
+                        className="ms-1" /></Card.Link></pre>
                 </td>
             </tr>
         );
@@ -362,17 +362,17 @@ export const CommandsTable = () => {
         <Card border="light" className="shadow-sm">
             <Card.Body className="p-0">
                 <Table responsive className="table-centered rounded"
-                       style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                     <thead className="thead-light">
-                    <tr>
-                        <th className="border-0" style={{width: '5%'}}>Name</th>
-                        <th className="border-0" style={{width: '5%'}}>Usage</th>
-                        <th className="border-0" style={{width: '50%'}}>Description</th>
-                        <th className="border-0" style={{width: '40%'}}>Extra</th>
-                    </tr>
+                        <tr>
+                            <th className="border-0" style={{ width: '5%' }}>Name</th>
+                            <th className="border-0" style={{ width: '5%' }}>Usage</th>
+                            <th className="border-0" style={{ width: '50%' }}>Description</th>
+                            <th className="border-0" style={{ width: '40%' }}>Extra</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {commands.map(c => <TableRow key={`command-${c.id}`} {...c} />)}
+                        {commands.map(c => <TableRow key={`command-${c.id}`} {...c} />)}
                     </tbody>
                 </Table>
             </Card.Body>
@@ -380,13 +380,14 @@ export const CommandsTable = () => {
     );
 };
 
-{/*CAR LIST*/}
+{/*CAR LIST*/ }
 
-export const CarsTable = () => {
+export const CarsTable = ({test}) => {
+
     const totalCars = cars.length;
 
     const TableRow = (props) => {
-        const {carId, carClass, brand, model, seatingCapacity, engineCapacity, engineType, mileage, price, status} = props;
+        const { carId, carClass, brand, model, seatingCapacity, engineCapacity, engineType, mileage, price, status } = props;
         const statusVariant = status === "Available" ? "success"
             : status === "Rented" ? "warning"
                 : status === "Retired" ? "danger" : "primary";
@@ -394,74 +395,74 @@ export const CarsTable = () => {
         return (
             <tr>
                 <td>
-          <span className="fw-normal">
-            {carId}
-          </span>
+                    <span className="fw-normal">
+                        {carId}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {carClass}
-          </span>
+                    <span className="fw-normal">
+                        {carClass}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {brand}
-          </span>
+                    <span className="fw-normal">
+                        {brand}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {model}
-          </span>
+                    <span className="fw-normal">
+                        {model}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {seatingCapacity}
-          </span>
+                    <span className="fw-normal">
+                        {seatingCapacity}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {engineCapacity} l
-          </span>
+                    <span className="fw-normal">
+                        {engineCapacity} l
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {engineType}
-          </span>
+                    <span className="fw-normal">
+                        {engineType}
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {mileage} km
-          </span>
+                    <span className="fw-normal">
+                        {mileage} km
+                    </span>
                 </td>
                 <td>
-          <span className="fw-normal">
-            {parseFloat(price).toFixed(2)} zł
-          </span>
+                    <span className="fw-normal">
+                        {parseFloat(price).toFixed(2)} zł
+                    </span>
                 </td>
                 <td>
-          <span className={`fw-normal text-${statusVariant}`}>
-            {status}
-          </span>
+                    <span className={`fw-normal text-${statusVariant}`}>
+                        {status}
+                    </span>
                 </td>
                 <td>
                     <Dropdown as={ButtonGroup}>
                         <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
-              <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark"/>
-              </span>
+                            <span className="icon icon-sm">
+                                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                            </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             <Dropdown.Item>
-                                <FontAwesomeIcon icon={faCar} className="me-2"/> Rent
+                                <FontAwesomeIcon icon={faCar} className="me-2" /> Rent
                             </Dropdown.Item>
                             <Dropdown.Item>
-                                <FontAwesomeIcon icon={faEye} className="me-2"/> View Details
+                                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item>
-                                <FontAwesomeIcon icon={faEdit} className="me-2"/> Edit
+                                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
-                            <Dropdown.Item className="text-danger">
-                                <FontAwesomeIcon icon={faTrashAlt} className="me-2"/> Remove
+                            <Dropdown.Item className="text-danger" onClick={() => props.test(true)}>
+                                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
@@ -475,22 +476,22 @@ export const CarsTable = () => {
             <Card.Body className="pt-0">
                 <Table hover className="user-table align-items-center">
                     <thead>
-                    <tr>
-                        <th className="border-bottom">ID</th>
-                        <th className="border-bottom">Class</th>
-                        <th className="border-bottom">Brand</th>
-                        <th className="border-bottom">Model</th>
-                        <th className="border-bottom">Seating Capacity</th>
-                        <th className="border-bottom">Engine Capacity</th>
-                        <th className="border-bottom">Engine Type</th>
-                        <th className="border-bottom">Mileage</th>
-                        <th className="border-bottom">Price per day</th>
-                        <th className="border-bottom">Status</th>
-                        <th className="border-bottom">Action</th>
-                    </tr>
+                        <tr>
+                            <th className="border-bottom">ID</th>
+                            <th className="border-bottom">Class</th>
+                            <th className="border-bottom">Brand</th>
+                            <th className="border-bottom">Model</th>
+                            <th className="border-bottom">Seating Capacity</th>
+                            <th className="border-bottom">Engine Capacity</th>
+                            <th className="border-bottom">Engine Type</th>
+                            <th className="border-bottom">Mileage</th>
+                            <th className="border-bottom">Price per day</th>
+                            <th className="border-bottom">Status</th>
+                            <th className="border-bottom">Action</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {cars.map(t => <TableRow key={`car-${t.carId}`} {...t} />)}
+                        {cars.map(t => <TableRow key={`car-${t.carId}`} {...t} test = {test}/>)}
                     </tbody>
                 </Table>
                 <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
