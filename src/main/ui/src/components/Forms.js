@@ -247,20 +247,16 @@ export const AddCarForm = () => {
                     </Row>
                     <h5 className="mb-4">Additional information</h5>
                     <Row>
-                        <Col md={8} className="mb-3">
+                        <Col md={6} className="mb-3">
                             <Form.Group className="mb-2">
                                 <Form.Label>Notes</Form.Label>
                                 <Form.Control required type="text" placeholder="Enter notes here" />
                             </Form.Group>
                         </Col>
-                        <Col md={4} className="mb-3">
+                        <Col md={6} className="mb-3">
                             <Form.Group className="mb-2">
                                 <Form.Label>Add photos</Form.Label>
-                                <p>
-                                    <Button variant="primary" className="text-white ms-auto">
-                                        Click me
-                                    </Button>
-                                </p>
+                                <Form.Control required type="file"/>
                             </Form.Group>
                         </Col>
                     </Row>
