@@ -382,7 +382,7 @@ export const CommandsTable = () => {
 
 {/*CAR LIST*/ }
 
-export const CarsTable = ({test}) => {
+export const CarsTable = ({deleteF,detailsF}) => {
 
     const totalCars = cars.length;
 
@@ -455,13 +455,13 @@ export const CarsTable = ({test}) => {
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faCar} className="me-2" /> Rent
                             </Dropdown.Item>
-                            <Dropdown.Item>
-                                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+                            <Dropdown.Item onClick={() => props.detailsF(true)}>
+                                <FontAwesomeIcon icon={faEye} className="me-2"/> View Details
                             </Dropdown.Item>
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                             </Dropdown.Item>
-                            <Dropdown.Item className="text-danger" onClick={() => props.test(true)}>
+                            <Dropdown.Item className="text-danger" onClick={() => props.deleteF(true)}>
                                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
                             </Dropdown.Item>
                         </Dropdown.Menu>
@@ -491,7 +491,7 @@ export const CarsTable = ({test}) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {cars.map(t => <TableRow key={`car-${t.carId}`} {...t} test = {test}/>)}
+                        {cars.map(t => <TableRow key={`car-${t.carId}`} {...t} detailsF = {detailsF} deleteF = {deleteF}/>)}
                     </tbody>
                 </Table>
                 <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">

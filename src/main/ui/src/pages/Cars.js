@@ -4,12 +4,14 @@ import { faCheck, faCog, faHome, faSearch, faPlus } from '@fortawesome/free-soli
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, Modal } from '@themesberg/react-bootstrap';
 
 import { CarsTable } from "../components/Tables";
+import { AddCarForm } from "../components/Forms";
 
 export default () => {
 
     const [showDefault, setShowDefault] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
-    const handleClose = () => setShowDefault(false) && setShowDelete(false);
+    const [showDetails, setShowDetails] = useState(false);
+    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false);
 
     return (
         <>
@@ -31,13 +33,18 @@ export default () => {
 
             {/*Adding a new car - modal*/}
 
-            <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
+            <Modal
+                size="lg"
+                centered
+                show={showDefault}
+                onHide={handleClose}
+            >
                 <Modal.Header>
                     <Modal.Title className="h6">Add a new car</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Add a car example</p>
+                    <AddCarForm />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -65,6 +72,26 @@ export default () => {
                     </Button>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
                         Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/*Show car's details - modal*/}
+
+            <Modal as={Modal.Dialog} centered show={showDetails} onHide={handleClose}>
+                <Modal.Header>
+                    <Modal.Title className="h6">Car Details</Modal.Title>
+                    <Button variant="close" aria-label="Close" onClick={handleClose} />
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Define details here</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="warning" onClick={handleClose}>
+                        Rent
+                    </Button>
+                    <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
+                        Close
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -100,7 +127,7 @@ export default () => {
                 </Row>
             </div>
 
-            <CarsTable test = {setShowDefault}/>
+            <CarsTable deleteF={setShowDelete} detailsF={setShowDetails} />
         </>
     );
 };

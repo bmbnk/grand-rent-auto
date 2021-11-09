@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import moment from "moment-timezone";
 import Datetime from "react-datetime";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
-import {Col, Row, Card, Form, Button, InputGroup} from '@themesberg/react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
 
 
 export const GeneralInfoForm = () => {
@@ -18,13 +18,13 @@ export const GeneralInfoForm = () => {
                         <Col md={6} className="mb-3">
                             <Form.Group id="firstName">
                                 <Form.Label>First Name</Form.Label>
-                                <Form.Control required type="text" placeholder="Enter your first name"/>
+                                <Form.Control required type="text" placeholder="Enter your first name" />
                             </Form.Group>
                         </Col>
                         <Col md={6} className="mb-3">
                             <Form.Group id="lastName">
                                 <Form.Label>Last Name</Form.Label>
-                                <Form.Control required type="text" placeholder="Also your last name"/>
+                                <Form.Control required type="text" placeholder="Also your last name" />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -37,7 +37,7 @@ export const GeneralInfoForm = () => {
                                     onChange={setBirthday}
                                     renderInput={(props, openCalendar) => (
                                         <InputGroup>
-                                            <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt}/></InputGroup.Text>
+                                            <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
                                             <Form.Control
                                                 required
                                                 type="text"
@@ -45,9 +45,9 @@ export const GeneralInfoForm = () => {
                                                 placeholder="mm/dd/yyyy"
                                                 onFocus={openCalendar}
                                                 onChange={() => {
-                                                }}/>
+                                                }} />
                                         </InputGroup>
-                                    )}/>
+                                    )} />
                             </Form.Group>
                         </Col>
                         <Col md={6} className="mb-3">
@@ -65,13 +65,13 @@ export const GeneralInfoForm = () => {
                         <Col md={6} className="mb-3">
                             <Form.Group id="emal">
                                 <Form.Label>Email</Form.Label>
-                                <Form.Control required type="email" placeholder="name@company.com"/>
+                                <Form.Control required type="email" placeholder="name@company.com" />
                             </Form.Group>
                         </Col>
                         <Col md={6} className="mb-3">
                             <Form.Group id="phone">
                                 <Form.Label>Phone</Form.Label>
-                                <Form.Control required type="number" placeholder="+12-345 678 910"/>
+                                <Form.Control required type="number" placeholder="+12-345 678 910" />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -81,13 +81,13 @@ export const GeneralInfoForm = () => {
                         <Col sm={9} className="mb-3">
                             <Form.Group id="address">
                                 <Form.Label>Address</Form.Label>
-                                <Form.Control required type="text" placeholder="Enter your home address"/>
+                                <Form.Control required type="text" placeholder="Enter your home address" />
                             </Form.Group>
                         </Col>
                         <Col sm={3} className="mb-3">
                             <Form.Group id="addressNumber">
                                 <Form.Label>Number</Form.Label>
-                                <Form.Control required type="number" placeholder="No."/>
+                                <Form.Control required type="number" placeholder="No." />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -95,7 +95,7 @@ export const GeneralInfoForm = () => {
                         <Col sm={4} className="mb-3">
                             <Form.Group id="city">
                                 <Form.Label>City</Form.Label>
-                                <Form.Control required type="text" placeholder="City"/>
+                                <Form.Control required type="text" placeholder="City" />
                             </Form.Group>
                         </Col>
                         <Col sm={4} className="mb-3">
@@ -160,7 +160,7 @@ export const GeneralInfoForm = () => {
                         <Col sm={4}>
                             <Form.Group id="zip">
                                 <Form.Label>ZIP</Form.Label>
-                                <Form.Control required type="tel" placeholder="ZIP"/>
+                                <Form.Control required type="tel" placeholder="ZIP" />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -170,5 +170,102 @@ export const GeneralInfoForm = () => {
                 </Form>
             </Card.Body>
         </Card>
+    );
+};
+
+
+export const AddCarForm = () => {
+    const [birthday, setBirthday] = useState("");
+
+    return (
+        <Card border="light" className="bg-white shadow-sm mb-4">
+            <Card.Body>
+                <h5 className="mb-4">General information</h5>
+                <Form>
+                    <Row>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="carBrand">
+                                <Form.Label>Brand</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter car's brand" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="carModel">
+                                <Form.Label>Model</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter car's model" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="seatingCapacity">
+                                <Form.Label>Seating Capacity</Form.Label>
+                                <Form.Control required type="number" placeholder="No. of seats" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="engineCapacity">
+                                <Form.Label>Engine Capacity</Form.Label>
+                                <Form.Control required type="number" placeholder="e.g. 1.9 l" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="mileage">
+                                <Form.Label>Mileage</Form.Label>
+                                <Form.Control required type="number" placeholder="e.g. 250000 km" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Select car's engine type</Form.Label>
+                                <Form.Select id="carClass" defaultValue="0">
+                                    <option value="0">Petrol</option>
+                                    <option value="D">Diesel</option>
+                                    <option value="H">Hybrid</option>
+                                    <option value="E">Electric</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Select car's class</Form.Label>
+                                <Form.Select id="carClass" defaultValue="0">
+                                    <option value="0">Economic</option>
+                                    <option value="P">Premium</option>
+                                    <option value="F">Family</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="price">
+                                <Form.Label>Price per day</Form.Label>
+                                <Form.Control required type="number" placeholder="e.g. 120 zł" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <h5 className="mb-4">Additional information</h5>
+                    <Row>
+                        <Col md={8} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Notes</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter notes here" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Add photos</Form.Label>
+                                <p>
+                                    <Button variant="primary" className="text-white ms-auto">
+                                        Click me
+                                    </Button>
+                                </p>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Form>
+            </Card.Body>
+        </Card >
     );
 };
