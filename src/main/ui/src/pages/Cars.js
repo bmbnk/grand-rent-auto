@@ -58,13 +58,7 @@ export class CarsTableBoot extends Component {
         }, {
             dataField: 'status',
             text: 'Status',
-            sort: true,
-            sortFunc: (a, b, order) => {
-                if (order === 'asc') {
-                    return b - a;
-                }
-                return a - b;
-            }
+            sort: true
         }]
     }
 
