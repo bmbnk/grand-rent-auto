@@ -23,6 +23,9 @@ import "./scss/volt.scss";
 // vendor styles
 import "@fortawesome/fontawesome-free/css/all.css";
 import "react-datetime/css/react-datetime.css";
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
+
 
 import HomePage from "./pages/HomePage";
 import ScrollToTop from "./components/ScrollToTop";

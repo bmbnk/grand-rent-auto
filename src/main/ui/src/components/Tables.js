@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faAngleDown,
@@ -26,6 +26,9 @@ import {
     ButtonGroup
 } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
+
+import BootstrapTable from "react-bootstrap-table-next";
+import axios from 'axios';
 
 import { Routes } from "../routes";
 import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
@@ -382,7 +385,7 @@ export const CommandsTable = () => {
 
 {/*CAR LIST*/ }
 
-export const CarsTable = ({deleteF,detailsF}) => {
+export const CarsTable = ({ deleteF, detailsF }) => {
 
     const totalCars = cars.length;
 
@@ -456,7 +459,7 @@ export const CarsTable = ({deleteF,detailsF}) => {
                                 <FontAwesomeIcon icon={faCar} className="me-2" /> Rent
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => props.detailsF(true)}>
-                                <FontAwesomeIcon icon={faEye} className="me-2"/> View Details
+                                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
                             </Dropdown.Item>
                             <Dropdown.Item>
                                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
@@ -491,7 +494,7 @@ export const CarsTable = ({deleteF,detailsF}) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {cars.map(t => <TableRow key={`car-${t.carId}`} {...t} detailsF = {detailsF} deleteF = {deleteF}/>)}
+                        {cars.map(t => <TableRow key={`car-${t.carId}`} {...t} detailsF={detailsF} deleteF={deleteF} />)}
                     </tbody>
                 </Table>
                 <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
