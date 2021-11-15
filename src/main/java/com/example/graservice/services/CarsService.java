@@ -36,4 +36,23 @@ public class CarsService {
         entityManager.persist(car);
         return car;
     }
+
+    public CarsEntity editCar(CarsEntity car, CarsEntity editedCar) {
+        entityManager.detach(car);
+        copyCarFields(car, editedCar);
+        entityManager.merge(car);
+        return car;
+    }
+
+    private void copyCarFields(CarsEntity targetCar, CarsEntity car) {
+        targetCar.setBrand(car.getBrand());
+        targetCar.setModel(car.getModel());
+        targetCar.setSeatingCapacity(car.getSeatingCapacity());
+        targetCar.setEngineCapacity(car.getEngineCapacity());
+        targetCar.setMileage(car.getMileage());
+        targetCar.setAvailability(car.getAvailability());
+        targetCar.setPictures(car.getPictures());
+        targetCar.setCarClass(car.getCarClass());
+        targetCar.setEngineType(car.getEngineType());
+    }
 }

@@ -56,4 +56,18 @@ public class CarsResource {
         return Response.status(201)
                 .entity(carsService.addCar(car)).build();
     }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response editCar(@PathParam("id") int id, CarsEntity editedCar) {
+        CarsEntity car = carsService.getCarById(id);
+        if (car != null)
+            return Response.ok(carsService.editCar(car, editedCar)).build();
+        return Response
+                .status(Response.Status.NOT_FOUND)
+                .entity("")
+                .build();
+    }
 }
