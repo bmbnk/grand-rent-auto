@@ -47,4 +47,13 @@ public class CarsResource {
                 .entity("")
                 .build();
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCar(CarsEntity car) {
+        // TODO: Make endpoint for adding photos
+        return Response.status(201)
+                .entity(carsService.addCar(car)).build();
+    }
 }

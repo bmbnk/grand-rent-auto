@@ -31,4 +31,9 @@ public class CarsService {
         }
         return false;
     }
+
+    public CarsEntity addCar(CarsEntity car) {
+        entityManager.persist(car);
+        return car;
+    }
 }
