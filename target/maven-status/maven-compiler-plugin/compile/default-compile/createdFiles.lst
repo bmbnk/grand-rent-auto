@@ -1,2 +1,7 @@
-com\example\graservice\HelloApplication.class
-com\example\graservice\HelloResource.class
+com/example/graservice/entities/EmployeesEntity.class
+com/example/graservice/entities/CarsEntity.class
+com/example/graservice/entities/CarsEntity$CarClass.class
+com/example/graservice/entities/CarsEntity$EngineType.class
+com/example/graservice/entities/RentalsEntity.class
+com/example/graservice/entities/CustomersEntity.class
+com/example/graservice/GraApplication.class
