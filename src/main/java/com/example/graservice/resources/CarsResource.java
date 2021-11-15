@@ -36,4 +36,15 @@ public class CarsResource {
                 .entity("")
                 .build();
     }
+
+    @DELETE
+    @Path("/{id}")
+    public Response removeCarById(@PathParam("id") int id) {
+        if (carsService.removeCarById(id))
+            return Response.noContent().build();
+        return Response
+                .status(Response.Status.NOT_FOUND)
+                .entity("")
+                .build();
+    }
 }

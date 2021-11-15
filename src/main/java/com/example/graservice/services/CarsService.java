@@ -22,4 +22,13 @@ public class CarsService {
     public CarsEntity getCarById(int id) {
         return entityManager.find(CarsEntity.class, id);
     }
+
+    public boolean removeCarById(int id) {
+        CarsEntity car = getCarById(id);
+        if (car != null) {
+            entityManager.remove(car);
+            return true;
+        }
+        return false;
+    }
 }
