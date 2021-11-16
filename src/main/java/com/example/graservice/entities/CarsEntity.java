@@ -16,10 +16,11 @@ public class CarsEntity {
     private Byte availability;
     private CarClass carClass;
     private EngineType engineType;
+    private Float pricePerDay;
 
 
     private enum CarClass {
-        p, s, f;
+        p, e, f;
     }
     private enum EngineType {
         petrol, diesel, lpg, hybrid, electric
@@ -118,6 +119,14 @@ public class CarsEntity {
         this.availability = availability;
     }
 
+    @Basic
+    @Column(name = "price_per_day")
+    public Float getPricePerDay() { return pricePerDay; }
+
+    public void setPricePerDay(Float pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,6 +145,7 @@ public class CarsEntity {
         if (engineType != null ? !engineType.equals(that.engineType) : that.engineType != null) return false;
         if (mileage != null ? !mileage.equals(that.mileage) : that.mileage != null) return false;
         if (availability != null ? !availability.equals(that.availability) : that.availability != null) return false;
+        if (pricePerDay != null ? !pricePerDay.equals(that.pricePerDay) : that.pricePerDay != null) return false;
 
         return true;
     }
@@ -151,6 +161,7 @@ public class CarsEntity {
         result = 31 * result + (engineType != null ? engineType.hashCode() : 0);
         result = 31 * result + (mileage != null ? mileage.hashCode() : 0);
         result = 31 * result + (availability != null ? availability.hashCode() : 0);
+        result = 31 * result + (pricePerDay != null ? pricePerDay.hashCode() : 0);
         return result;
     }
 }
