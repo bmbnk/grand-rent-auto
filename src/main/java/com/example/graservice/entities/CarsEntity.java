@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Arrays;
 
 @Entity
-@Table(name = "cars", schema = "gra", catalog = "")
+@Table(name = "cars", schema = "mydb", catalog = "")
 public class CarsEntity {
     private int carId;
     private String brand;

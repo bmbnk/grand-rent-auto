@@ -25,7 +25,7 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <datasource-mapping>
-          <factory-entry name="default" />
+          <factory-entry name="default" value="22b6623c-1335-402e-b6ca-3ff456bafcf3" />
           <factory-entry name="gra-service" />
         </datasource-mapping>
         <naming-strategy-map />

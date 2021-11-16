@@ -1,0 +1,59 @@
+package com.example.graservice.resources;
+
+import com.example.graservice.entities.CustomersEntity;
+import com.example.graservice.services.CustomersService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+import java.util.List;
+
+@Path("/customers")
+@RequestScoped
+public class CustomersResource {
+
+    @Inject
+    private CustomersService customersService;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CustomersEntity> getAllCustomers() {
+        return customersService.getAllCustomers();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response getCustomerById(@PathParam("id") int id) {
+        CustomersEntity customer = customersService.getCustomerById(id);
+        if(customer != null) {
+            return Response.ok(customer).build();
+        }
+        return Response
+                .status(Response.Status.NOT_FOUND)
+                .entity("")
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response removeCustomerById(@PathParam("id") int id) {
+        if(customersService.removeCustomerById(id)) {
+            return Response.noContent().build();
+        }
+        return Response
+                .status(Response.Status.NOT_FOUND)
+                .entity("")
+                .build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCustomer(CustomersEntity customer) {
+        return Response.status(201)
+                .entity(customersService.addCustomer(customer)).build();
+    }
+}
