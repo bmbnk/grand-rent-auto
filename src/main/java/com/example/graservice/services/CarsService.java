@@ -51,7 +51,6 @@ public class CarsService {
         targetCar.setEngineCapacity(car.getEngineCapacity());
         targetCar.setMileage(car.getMileage());
         targetCar.setAvailability(car.getAvailability());
-        targetCar.setPictures(car.getPictures());
         targetCar.setCarClass(car.getCarClass());
         targetCar.setEngineType(car.getEngineType());
     }

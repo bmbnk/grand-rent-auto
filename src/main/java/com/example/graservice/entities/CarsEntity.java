@@ -14,7 +14,6 @@ public class CarsEntity {
     private Double engineCapacity;
     private Integer mileage;
     private Byte availability;
-    private byte[] pictures;
     private CarClass carClass;
     private EngineType engineType;
 
@@ -119,16 +118,6 @@ public class CarsEntity {
         this.availability = availability;
     }
 
-    @Basic
-    @Column(name = "pictures")
-    public byte[] getPictures() {
-        return pictures;
-    }
-
-    public void setPictures(byte[] pictures) {
-        this.pictures = pictures;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -147,7 +136,6 @@ public class CarsEntity {
         if (engineType != null ? !engineType.equals(that.engineType) : that.engineType != null) return false;
         if (mileage != null ? !mileage.equals(that.mileage) : that.mileage != null) return false;
         if (availability != null ? !availability.equals(that.availability) : that.availability != null) return false;
-        if (!Arrays.equals(pictures, that.pictures)) return false;
 
         return true;
     }
@@ -163,7 +151,6 @@ public class CarsEntity {
         result = 31 * result + (engineType != null ? engineType.hashCode() : 0);
         result = 31 * result + (mileage != null ? mileage.hashCode() : 0);
         result = 31 * result + (availability != null ? availability.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(pictures);
         return result;
     }
 }

@@ -20,8 +20,11 @@ public class CarsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<CarsEntity> getAllCars() {
-        return carsService.getAllCars();
+    public Response getAllCars() {
+        return  Response
+                .ok(carsService.getAllCars())
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     @GET
@@ -30,10 +33,14 @@ public class CarsResource {
     public Response getCarById(@PathParam("id") int id) {
         CarsEntity car = carsService.getCarById(id);
         if (car != null)
-            return Response.ok(car).build();
+            return Response
+                    .ok(car)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .build();
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
+                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -41,10 +48,14 @@ public class CarsResource {
     @Path("/{id}")
     public Response removeCarById(@PathParam("id") int id) {
         if (carsService.removeCarById(id))
-            return Response.noContent().build();
+            return Response
+                    .noContent()
+                    .header("Access-Control-Allow-Origin", "*")
+                    .build();
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
+                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -53,8 +64,11 @@ public class CarsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCar(CarsEntity car) {
         // TODO: Make endpoint for adding photos
-        return Response.status(201)
-                .entity(carsService.addCar(car)).build();
+        return Response
+                .status(201)
+                .entity(carsService.addCar(car))
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     @PUT
@@ -64,10 +78,14 @@ public class CarsResource {
     public Response editCar(@PathParam("id") int id, CarsEntity editedCar) {
         CarsEntity car = carsService.getCarById(id);
         if (car != null)
-            return Response.ok(carsService.editCar(car, editedCar)).build();
+            return Response
+                    .ok(carsService.editCar(car, editedCar))
+                    .header("Access-Control-Allow-Origin", "*")
+                    .build();
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
+                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 }
