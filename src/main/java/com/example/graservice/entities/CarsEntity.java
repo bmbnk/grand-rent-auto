@@ -20,7 +20,7 @@ public class CarsEntity {
 
 
     private enum CarClass {
-        p, e, f;
+        p, e, f
     }
     private enum EngineType {
         petrol, diesel, lpg, hybrid, electric

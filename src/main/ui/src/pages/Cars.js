@@ -16,10 +16,26 @@ export class CarsTableBoot extends Component {
         cars: [],
         columns: [{
             dataField: 'carId',
-            text: 'ID'
+            text: 'ID',
+            sort: true,
+            sortFunc: (a, b, order) => {
+                if (order === 'asc') {
+                    return b - a;
+                }
+                return a - b;
+            }
         }, {
             dataField: 'carClass',
-            text: 'Class'
+            text: 'Class',
+            formatter: (cellContent, row) => {
+                if (row.carClass === 'p') {
+                    return <p>Premium</p>
+                } else if (row.carClass === 'e') {
+                    return <p>Economic</p>
+                } else if (row.carClass === 'f') {
+                    return <p>Family</p>
+                }
+            }
         }, {
             dataField: 'brand',
             text: 'Brand'
@@ -28,13 +44,34 @@ export class CarsTableBoot extends Component {
             text: 'Model'
         }, {
             dataField: 'seatingCapacity',
-            text: 'Seating Capacity'
+            text: 'Seating Capacity',
+            sort: true,
+            sortFunc: (a, b, order) => {
+                if (order === 'asc') {
+                    return b - a;
+                }
+                return a - b;
+            },
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p style={{ textTransform: 'lowercase' }}> {row.seatingCapacity} persons</p> </React.Fragment >
+            }
         }, {
             dataField: 'engineCapacity',
-            text: 'Engine Capacity'
+            text: 'Engine Capacity',
+            sort: true,
+            sortFunc: (a, b, order) => {
+                if (order === 'asc') {
+                    return b - a;
+                }
+                return a - b;
+            },
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p style={{ textTransform: 'lowercase' }}> {parseFloat(row.engineCapacity).toFixed(1)} l</p></React.Fragment>
+            }
         }, {
             dataField: 'engineType',
-            text: 'Engine Type'
+            text: 'Engine Type',
+            sort: true
         }, {
             dataField: 'mileage',
             text: 'Mileage',
@@ -44,9 +81,12 @@ export class CarsTableBoot extends Component {
                     return b - a;
                 }
                 return a - b;
+            },
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p style={{ textTransform: 'lowercase' }}> {row.mileage} km</p></React.Fragment>
             }
         }, {
-            dataField: 'price',
+            dataField: 'pricePerDay',
             text: 'Car Price',
             sort: true,
             sortFunc: (a, b, order) => {
@@ -54,16 +94,57 @@ export class CarsTableBoot extends Component {
                     return b - a;
                 }
                 return a - b;
+            },
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p style={{ textTransform: 'lowercase' }}> {row.pricePerDay} zł / day</p></React.Fragment>
             }
         }, {
-            dataField: 'status',
+            dataField: 'availability',
             text: 'Status',
-            sort: true
+            sort: true,
+            formatter: (cellContent, row) => {
+                if (row.availability == '1') {
+                    return <p style={{ color: 'green' }}>Available</p>
+                } else if (row.availability == '2') {
+                    return <p style={{ color: 'gray' }}>Rented</p>
+                } else if (row.availability == '3') {
+                    return <p style={{ color: 'red' }}>Retired</p>
+                }
+            }
+        }, {
+            dataField: 'actions',
+            text: 'Actions',
+            isDummyField: true,
+            // formatter: (cellContent, row, rowIndex, extraDataJson) => {
+            //     const parsedExtraData = JSON.parse(extraDataJson);
+            //     const carUuid = row.carId;
+            //     const cars = parsedExtraData.cars;
+            //     var dataIndex = cars.findIndex(cars => cars.carId === carUuid);
+
+            //     return (
+            //         <Dropdown
+            //             onDropdownItemClick={(action) => {
+            //                 switch (action) {
+            //                     case 'RENT_CAR':
+            //                         break;
+            //                     case 'VIEW_CAR':
+            //                         break;
+            //                     case 'EDIT_CAR':
+            //                         break;
+            //                     case 'DELETE_CAR':
+            //                         break;
+            //                     default:
+            //                         return;
+            //                 }
+            //             }}
+            //         />
+            //     )
+            // }
         }]
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/carsReturn.json')
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars')
             .then(response => {
                 this.setState({
                     cars: response.data
@@ -75,7 +156,7 @@ export class CarsTableBoot extends Component {
         return (
             <Card border="light" className="table-wrapper table-responsive shadow-sm">
                 <Card.Body className="px-4">
-                    <BootstrapTable hover className="user-table align-items-center" keyField='carId' data={data} columns={this.state.columns} bordered={false} />
+                    <BootstrapTable hover className="user-table align-items-center" keyField='carId' data={this.state.cars} columns={this.state.columns} bordered={false} rowStyle={{ textTransform: 'capitalize' }} />
                 </Card.Body>
                 <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
                     <Nav>
