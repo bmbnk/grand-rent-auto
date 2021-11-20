@@ -36,4 +36,18 @@ public class CustomersService {
         entityManager.persist(customer);
         return customer;
     }
+
+    public CustomersEntity editCustomer(CustomersEntity customer, CustomersEntity editedCustomer) {
+        entityManager.detach(customer);
+        copyCustomerFields(customer, editedCustomer);
+        entityManager.merge(customer);
+        return customer;
+    }
+
+    private void copyCustomerFields(CustomersEntity targetCustomer, CustomersEntity customer) {
+        targetCustomer.setFirstName(customer.getFirstName());
+        targetCustomer.setLastName(customer.getLastName());
+        targetCustomer.seteMail(customer.geteMail());
+        targetCustomer.setPhoneNumber(customer.getPhoneNumber());
+    }
 }
