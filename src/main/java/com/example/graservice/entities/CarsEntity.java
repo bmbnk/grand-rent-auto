@@ -1,5 +1,6 @@
 package com.example.graservice.entities;
 
+import com.example.graservice.entities.enums.*;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,19 +12,11 @@ public class CarsEntity {
     private Integer seatingCapacity;
     private Double engineCapacity;
     private Integer mileage;
-    private boolean available;
+    private CarStatus status;
     private CarClass carClass;
     private EngineType engineType;
     private Float pricePerDay;
     private String notes;
-
-
-    private enum CarClass {
-        p, e, f
-    }
-    private enum EngineType {
-        petrol, diesel, lpg, hybrid, electric
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -109,16 +102,6 @@ public class CarsEntity {
     }
 
     @Basic
-    @Column(name = "availability", columnDefinition = "TINYINT(1)")
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    @Basic
     @Column(name = "price_per_day")
     public Float getPricePerDay() { return pricePerDay; }
 
@@ -134,6 +117,17 @@ public class CarsEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Basic
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    public CarStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CarStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -153,9 +147,9 @@ public class CarsEntity {
             return false;
         if (engineType != null ? !engineType.equals(that.engineType) : that.engineType != null) return false;
         if (mileage != null ? !mileage.equals(that.mileage) : that.mileage != null) return false;
-        if (!(available == that.available)) return false;
         if (pricePerDay != null ? !pricePerDay.equals(that.pricePerDay) : that.pricePerDay != null) return false;
         if (notes != null ? !notes.equals(that.notes) : that.notes != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
 
         return true;
     }
@@ -172,6 +166,7 @@ public class CarsEntity {
         result = 31 * result + (mileage != null ? mileage.hashCode() : 0);
         result = 31 * result + (pricePerDay != null ? pricePerDay.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
 
         return result;
     }
