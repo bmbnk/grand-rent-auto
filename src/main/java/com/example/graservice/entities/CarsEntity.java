@@ -2,8 +2,6 @@ package com.example.graservice.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Arrays;
-
 @Entity
 @Table(name = "cars", schema = "gra", catalog = "")
 public class CarsEntity {
@@ -13,7 +11,7 @@ public class CarsEntity {
     private Integer seatingCapacity;
     private Double engineCapacity;
     private Integer mileage;
-    private Byte availability;
+    private boolean available;
     private CarClass carClass;
     private EngineType engineType;
     private Float pricePerDay;
@@ -111,13 +109,13 @@ public class CarsEntity {
     }
 
     @Basic
-    @Column(name = "availability")
-    public Byte getAvailability() {
-        return availability;
+    @Column(name = "availability", columnDefinition = "TINYINT(1)")
+    public boolean isAvailable() {
+        return available;
     }
 
-    public void setAvailability(Byte availability) {
-        this.availability = availability;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     @Basic
@@ -155,7 +153,7 @@ public class CarsEntity {
             return false;
         if (engineType != null ? !engineType.equals(that.engineType) : that.engineType != null) return false;
         if (mileage != null ? !mileage.equals(that.mileage) : that.mileage != null) return false;
-        if (availability != null ? !availability.equals(that.availability) : that.availability != null) return false;
+        if (!(available == that.available)) return false;
         if (pricePerDay != null ? !pricePerDay.equals(that.pricePerDay) : that.pricePerDay != null) return false;
         if (notes != null ? !notes.equals(that.notes) : that.notes != null) return false;
 
@@ -172,7 +170,6 @@ public class CarsEntity {
         result = 31 * result + (engineCapacity != null ? engineCapacity.hashCode() : 0);
         result = 31 * result + (engineType != null ? engineType.hashCode() : 0);
         result = 31 * result + (mileage != null ? mileage.hashCode() : 0);
-        result = 31 * result + (availability != null ? availability.hashCode() : 0);
         result = 31 * result + (pricePerDay != null ? pricePerDay.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
 
