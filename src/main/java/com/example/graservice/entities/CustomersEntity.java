@@ -12,7 +12,7 @@ public class CustomersEntity {
     private Integer phoneNumber;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     public int getCustomerId() {
         return customerId;
@@ -43,7 +43,7 @@ public class CustomersEntity {
     }
 
     @Basic
-    @Column(name = "e-mail")
+    @Column(name = "e_mail")
     public String geteMail() {
         return eMail;
     }
