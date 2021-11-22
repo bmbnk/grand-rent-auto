@@ -6,6 +6,7 @@ export const Routes = {
     Cars: {path: "/cars"},
     Rentals: {path: "/rentals"},
     Users: {path: "/users"},
+    Clients: {path: "/clients"},
     Settings: {path: "/settings"},
     Upgrade: {path: "/upgrade"},
     BootstrapTables: {path: "/tables/bootstrap-tables"},
