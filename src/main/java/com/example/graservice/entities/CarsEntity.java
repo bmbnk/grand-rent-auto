@@ -17,6 +17,7 @@ public class CarsEntity {
     private CarClass carClass;
     private EngineType engineType;
     private Float pricePerDay;
+    private String notes;
 
 
     private enum CarClass {
@@ -127,6 +128,16 @@ public class CarsEntity {
         this.pricePerDay = pricePerDay;
     }
 
+    @Basic
+    @Column(name = "notes")
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -146,6 +157,7 @@ public class CarsEntity {
         if (mileage != null ? !mileage.equals(that.mileage) : that.mileage != null) return false;
         if (availability != null ? !availability.equals(that.availability) : that.availability != null) return false;
         if (pricePerDay != null ? !pricePerDay.equals(that.pricePerDay) : that.pricePerDay != null) return false;
+        if (notes != null ? !notes.equals(that.notes) : that.notes != null) return false;
 
         return true;
     }
@@ -162,6 +174,8 @@ public class CarsEntity {
         result = 31 * result + (mileage != null ? mileage.hashCode() : 0);
         result = 31 * result + (availability != null ? availability.hashCode() : 0);
         result = 31 * result + (pricePerDay != null ? pricePerDay.hashCode() : 0);
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+
         return result;
     }
 }
