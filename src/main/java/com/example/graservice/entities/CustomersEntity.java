@@ -3,7 +3,7 @@ package com.example.graservice.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "customers", schema = "mydb", catalog = "")
+@Table(name = "customers", schema = "gra", catalog = "")
 public class CustomersEntity {
     private int customerId;
     private String firstName;
