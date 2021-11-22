@@ -23,7 +23,7 @@ export class CustomersTableBoot extends Component {
             }
         }, {
             dataField: 'firstName',
-            text: 'First name',
+            text: 'First name'
         }, {
             dataField: 'lastName',
             text: 'Last name'

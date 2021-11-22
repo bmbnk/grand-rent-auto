@@ -1,12 +1,18 @@
 import React, { useState, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCog, faHome, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
+import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, DropdownButton, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
+
+import dots from "../assets/img/icons/dots.svg"
+
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 
 import axios from 'axios';
 
 import { AddCarForm } from "../components/Forms";
 import BootstrapTable from "react-bootstrap-table-next";
+
+const { SearchBar } = Search;
 
 export class CarsTableBoot extends Component {
     state = {
@@ -35,10 +41,16 @@ export class CarsTableBoot extends Component {
             }
         }, {
             dataField: 'brand',
-            text: 'Brand'
+            text: 'Brand',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.brand}</p></React.Fragment>
+            }
         }, {
             dataField: 'model',
-            text: 'Model'
+            text: 'Model',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.model}</p></React.Fragment>
+            }
         }, {
             dataField: 'seatingCapacity',
             text: 'Seating Capacity',
@@ -68,7 +80,10 @@ export class CarsTableBoot extends Component {
         }, {
             dataField: 'engineType',
             text: 'Engine Type',
-            sort: true
+            sort: true,
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.engineType}</p></React.Fragment>
+            }
         }, {
             dataField: 'mileage',
             text: 'Mileage',
@@ -112,31 +127,44 @@ export class CarsTableBoot extends Component {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
-            // formatter: (cellContent, row, rowIndex, extraDataJson) => {
-            //     const parsedExtraData = JSON.parse(extraDataJson);
-            //     const carUuid = row.carId;
-            //     const cars = parsedExtraData.cars;
-            //     var dataIndex = cars.findIndex(cars => cars.carId === carUuid);
+            formatter: (cellContent, row, rowIndex, extraDataJson) => {
+                // const parsedExtraData = JSON.parse(extraDataJson);
+                // const carUuid = row.carId;
+                // const cars = parsedExtraData.cars;
+                // var dataIndex = cars.findIndex(cars => cars.carId === carUuid);
 
-            //     return (
-            //         <Dropdown
-            //             onDropdownItemClick={(action) => {
-            //                 switch (action) {
-            //                     case 'RENT_CAR':
-            //                         break;
-            //                     case 'VIEW_CAR':
-            //                         break;
-            //                     case 'EDIT_CAR':
-            //                         break;
-            //                     case 'DELETE_CAR':
-            //                         break;
-            //                     default:
-            //                         return;
-            //                 }
-            //             }}
-            //         />
-            //     )
-            // }
+                return (
+                    <p>
+                        <Dropdown>
+                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                <img src={dots}/>
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </p>
+                    // <Dropdown
+                    //     onDropdownItemClick={(action) => {
+                    //         switch (action) {
+                    //             case 'RENT_CAR':
+                    //                 break;
+                    //             case 'VIEW_CAR':
+                    //                 break;
+                    //             case 'EDIT_CAR':
+                    //                 break;
+                    //             case 'DELETE_CAR':
+                    //                 break;
+                    //             default:
+                    //                 return;
+                    //         }
+                    //     }}
+                    // />
+                )
+            }
         }]
     }
 
@@ -150,10 +178,31 @@ export class CarsTableBoot extends Component {
     }
 
     render() {
+
         return (
             <Card border="light" className="table-wrapper table-responsive shadow-sm">
                 <Card.Body className="px-4">
-                    <BootstrapTable hover className="user-table align-items-center" keyField='carId' data={this.state.cars} columns={this.state.columns} bordered={false} rowStyle={{ textTransform: 'capitalize' }} />
+                    <ToolkitProvider
+                        keyField="id"
+                        data={this.state.cars}
+                        columns={this.state.columns}
+                        search
+                    >
+                        {
+                            props => (
+                                <div>
+                                    <div className="table-settings mb-4">
+                                        <Row className="justify-content-between align-items-center">
+                                            <Col xs={8} md={6} lg={3} xl={4}>
+                                                <SearchBar {...props.searchProps} />
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                    <BootstrapTable {...props.baseProps} hover className="user-table align-items-center" keyField='carId' data={this.state.cars} columns={this.state.columns} bordered={false} rowStyle={{ textTransform: 'capitalize' }} />
+                                </div>
+                            )
+                        }
+                    </ToolkitProvider>
                 </Card.Body>
                 <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
                     <Nav>
@@ -175,7 +224,7 @@ export class CarsTableBoot extends Component {
                         Showing <b>5</b> out of <b>25</b> entries
                     </small>
                 </Card.Footer>
-            </Card>
+            </Card >
         )
     }
 };

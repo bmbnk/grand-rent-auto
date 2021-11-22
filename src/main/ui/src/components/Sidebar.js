@@ -7,6 +7,7 @@ import {
     faCog,
     faCar,
     faUser,
+    faUsers,
     faFile, 
     faSignOutAlt, 
     faTimes
@@ -119,7 +120,7 @@ export default (props = {}) => {
                             <NavItem title="Cars" icon={faCar} link={Routes.Cars.path}/>
                             <NavItem title="Rentals" icon={faFile} link={Routes.Rentals.path}/>
                             <NavItem title="Clients" icon={faUser} link={Routes.Clients.path}/>
-                            <NavItem title="Users" icon={faUser} link={Routes.Users.path}/>
+                            <NavItem title="Users" icon={faUsers} link={Routes.Users.path}/>
                             <NavItem title="Settings" icon={faCog} link={Routes.Settings.path}/>
                         </Nav>
                     </div>
