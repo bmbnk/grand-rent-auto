@@ -175,8 +175,96 @@ export const GeneralInfoForm = () => {
 
 
 export const AddCarForm = () => {
-    const [birthday, setBirthday] = useState("");
+    return (
+        <Card border="light" className="bg-white shadow-sm mb-4">
+            <Card.Body>
+                <h5 className="mb-4">General information</h5>
+                <Form>
+                    <Row>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="carBrand">
+                                <Form.Label>Brand</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter car's brand" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="carModel">
+                                <Form.Label>Model</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter car's model" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="seatingCapacity">
+                                <Form.Label>Seating Capacity</Form.Label>
+                                <Form.Control required type="number" placeholder="No. of seats" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="engineCapacity">
+                                <Form.Label>Engine Capacity</Form.Label>
+                                <Form.Control required type="number" placeholder="e.g. 1.9 l" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="mileage">
+                                <Form.Label>Mileage</Form.Label>
+                                <Form.Control required type="number" placeholder="e.g. 250000 km" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Select car's engine type</Form.Label>
+                                <Form.Select id="carClass" defaultValue="0">
+                                    <option value="0">Petrol</option>
+                                    <option value="D">Diesel</option>
+                                    <option value="H">Hybrid</option>
+                                    <option value="E">Electric</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Select car's class</Form.Label>
+                                <Form.Select id="carClass" defaultValue="0">
+                                    <option value="0">Economic</option>
+                                    <option value="P">Premium</option>
+                                    <option value="F">Family</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={4} className="mb-3">
+                            <Form.Group id="price">
+                                <Form.Label>Price per day</Form.Label>
+                                <Form.Control required type="number" placeholder="e.g. 120 zł" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <h5 className="mb-4">Additional information</h5>
+                    <Row>
+                        <Col md={6} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Notes</Form.Label>
+                                <Form.Control required type="text" placeholder="Enter notes here" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6} className="mb-3">
+                            <Form.Group className="mb-2">
+                                <Form.Label>Add photos</Form.Label>
+                                <Form.Control required type="file"/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Form>
+            </Card.Body>
+        </Card >
+    );
+};
 
+export const AddCustomerForm = () => {
     return (
         <Card border="light" className="bg-white shadow-sm mb-4">
             <Card.Body>
