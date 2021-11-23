@@ -13,6 +13,9 @@ import { AddCarForm } from "../components/Forms";
 import BootstrapTable from "react-bootstrap-table-next";
 
 const { SearchBar } = Search;
+const Url = "http://localhost:8080/gra-service-1.0-SNAPSHOT/api/";
+
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] ='*';
 
 export class CarsTableBoot extends Component {
     state = {
@@ -30,14 +33,9 @@ export class CarsTableBoot extends Component {
         }, {
             dataField: 'carClass',
             text: 'Class',
+            sort: true,
             formatter: (cellContent, row) => {
-                if (row.carClass === 'p') {
-                    return <p>Premium</p>
-                } else if (row.carClass === 'e') {
-                    return <p>Economic</p>
-                } else if (row.carClass === 'f') {
-                    return <p>Family</p>
-                }
+                return <React.Fragment> <p> {row.carClass}</p></React.Fragment>
             }
         }, {
             dataField: 'brand',
@@ -127,26 +125,24 @@ export class CarsTableBoot extends Component {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
+            formatExtraData: { setShowDelete: this.props.openDelete },
             formatter: (cellContent, row, rowIndex, extraDataJson) => {
-                // const parsedExtraData = JSON.parse(extraDataJson);
-                // const carUuid = row.carId;
-                // const cars = parsedExtraData.cars;
-                // var dataIndex = cars.findIndex(cars => cars.carId === carUuid);
+                const carUuid = row.carId;
 
                 return (
-                    <p>
+                    <React.Fragment>
                         <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                <img src={dots}/>
+                            <Dropdown.Toggle id="dropdown-basic">
+                                ACTIONS
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
                                 <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
                                 <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
-                    </p>
+                    </React.Fragment>
                     // <Dropdown
                     //     onDropdownItemClick={(action) => {
                     //         switch (action) {
@@ -169,7 +165,7 @@ export class CarsTableBoot extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars')
+        axios.get(Url + 'cars')
             .then(response => {
                 this.setState({
                     cars: response.data
@@ -233,7 +229,28 @@ export default () => {
     const [showDefault, setShowDefault] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
+    const [uuid, setUuid] = useState(null);
     const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false);
+
+    function deleteCar(uuid, url) {
+        // axios.delete(url + 'cars/' + uuid)
+
+        //window.location.reload(false);
+            fetch(url + 'cars/' + uuid, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type":"application/json", 
+                    "Access-Control-Allow-Origin":"*",
+                    "Accept":"*/*", 
+                    "Access-Control-Allow-Headers":"Origin, Content-Type, X-Auth-Token",
+                    //"Access-Control-Allow-Headers":"Content-Type,Content-Length,Server,Date",
+                    "Access-Control-Allow-Methods":"GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
+                    "Access-Control-Expose-Headers":"Content-Type, Content-Length, Server, Date"
+                }
+            })
+                .then(res => res.text())
+                .then(res => console.log(res))
+    }
 
     return (
         <>
@@ -273,7 +290,7 @@ export default () => {
                     <p>Are you sure you want to delete this car?</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleClose}>
+                    <Button variant="danger" onClick={() => deleteCar(uuid, Url)}>
                         Delete
                     </Button>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
@@ -317,7 +334,7 @@ export default () => {
                     <span>New</span>
                 </Button>
             </div>
-            <CarsTableBoot />
+            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} />
         </>
     )
 }
