@@ -1,20 +1,20 @@
 package com.example.graservice.entities;
 
 import jakarta.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "rentals", schema = "gra", catalog = "")
 public class RentalsEntity {
     private int rentId;
-    private Date startDate;
-    private Date endDate;
-    private CarsEntity carsByCarId;
-    private EmployeesEntity employeesByEmployeeId;
-    private CustomersEntity customersByCustomerId;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private CarsEntity car;
+    private EmployeesEntity employee;
+    private CustomersEntity customer;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rent_id")
     public int getRentId() {
         return rentId;
@@ -26,21 +26,21 @@ public class RentalsEntity {
 
     @Basic
     @Column(name = "start_date")
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
     @Basic
     @Column(name = "end_date")
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -68,31 +68,29 @@ public class RentalsEntity {
 
     @ManyToOne
     @JoinColumn(name = "car_id", referencedColumnName = "car_id")
-    public CarsEntity getCarsByCarId() {
-        return carsByCarId;
+    public CarsEntity getCar() {
+        return car;
     }
 
-    public void setCarsByCarId(CarsEntity carsByCarId) {
-        this.carsByCarId = carsByCarId;
+    public void setCar(CarsEntity car) {
+        this.car = car;
     }
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "employees_id")
-    public EmployeesEntity getEmployeesByEmployeeId() {
-        return employeesByEmployeeId;
+    public EmployeesEntity getEmployee() {
+        return employee;
     }
 
-    public void setEmployeesByEmployeeId(EmployeesEntity employeesByEmployeeId) {
-        this.employeesByEmployeeId = employeesByEmployeeId;
+    public void setEmployee(EmployeesEntity employee) {
+        this.employee = employee;
     }
 
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    public CustomersEntity getCustomersByCustomerId() {
-        return customersByCustomerId;
-    }
+    public CustomersEntity getCustomer() { return customer; }
 
-    public void setCustomersByCustomerId(CustomersEntity customersByCustomerId) {
-        this.customersByCustomerId = customersByCustomerId;
+    public void setCustomer(CustomersEntity customer) {
+        this.customer = customer;
     }
 }

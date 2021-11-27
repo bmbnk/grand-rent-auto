@@ -66,7 +66,7 @@ public class EmployeesEntity {
     }
 
     @Basic
-    @Column(name = "e-mail")
+    @Column(name = "e_mail")
     public String geteMail() {
         return eMail;
     }

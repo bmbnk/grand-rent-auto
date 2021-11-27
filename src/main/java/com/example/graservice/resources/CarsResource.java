@@ -62,7 +62,7 @@ public class CarsResource {
     public Response addCar(CarsEntity car) {
         // TODO: Make endpoint for adding photos
         return Response
-                .status(201)
+                .status(Response.Status.CREATED)
                 .entity(carsService.addCar(car))
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
