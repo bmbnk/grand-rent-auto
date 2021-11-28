@@ -21,6 +21,10 @@ public class RentalsService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public RentalsEntity getRentalById(int id) {
+        return entityManager.find(RentalsEntity.class, id);
+    }
+
     public String validatePostRequest(JsonObject rentalData) {
         String errorMessage = "";
 
@@ -73,5 +77,16 @@ public class RentalsService {
         entityManager.persist(rental);
 
         return rental;
+    }
+
+    public boolean archiveRentalById(Integer rentId) {
+        RentalsEntity rental = getRentalById(rentId);
+        if (rental != null) {
+            entityManager.detach(rental);
+            rental.setArchived(true);
+            entityManager.merge(rental);
+            return true;
+        }
+        return false;
     }
 }

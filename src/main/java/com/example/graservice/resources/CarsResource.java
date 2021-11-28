@@ -2,8 +2,10 @@ package com.example.graservice.resources;
 
 import com.example.graservice.entities.CarsEntity;
 import com.example.graservice.services.CarsService;
+import com.example.graservice.services.RentalsService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.json.JsonObject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -14,6 +16,8 @@ public class CarsResource {
 
     @Inject
     private CarsService carsService;
+    @Inject
+    private RentalsService rentalsService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +68,35 @@ public class CarsResource {
         return Response
                 .status(Response.Status.CREATED)
                 .entity(carsService.addCar(car))
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/return")
+    public Response returnCar(@PathParam("id") int carId, JsonObject carUpdateData) {
+        Integer rentId = carsService.getCarsRentalId(carId);
+        if (rentId != null) {
+            String errorMessage = carsService.validateReturnedCarUpdateData(carUpdateData);
+            if (errorMessage.isEmpty()) {
+                rentalsService.archiveRentalById(rentId);
+                return Response
+                        .ok(carsService.updateReturnedCar(carId, carUpdateData))
+                        .header("Access-Control-Allow-Origin", "*")
+                        .build();
+            } else {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity(errorMessage)
+                        .header("Access-Control-Allow-Origin", "*")
+                        .build();
+            }
+        }
+        return Response
+                .status(Response.Status.BAD_REQUEST)
+                .entity("This car is not rented.")
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
     }

@@ -19,8 +19,8 @@ public class RentalsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addRental(JsonObject rental) {
-        String errors = rentalsService.validatePostRequest(rental);
-        if (errors.isEmpty())
+        String errorMessage = rentalsService.validatePostRequest(rental);
+        if (errorMessage.isEmpty())
             return Response
                     .status(Response.Status.CREATED)
                     .entity(rentalsService.addRental(rental))
@@ -28,7 +28,7 @@ public class RentalsResource {
                     .build();
         return Response
                 .status(Response.Status.FORBIDDEN)
-                .entity(errors)
+                .entity(errorMessage)
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
     }

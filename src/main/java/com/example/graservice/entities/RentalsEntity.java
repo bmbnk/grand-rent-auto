@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Table(name = "rentals", schema = "gra", catalog = "")
 public class RentalsEntity {
     private int rentId;
+    private boolean archived;
     private LocalDate startDate;
     private LocalDate endDate;
     private CarsEntity car;
@@ -23,6 +24,14 @@ public class RentalsEntity {
     public void setRentId(int rentId) {
         this.rentId = rentId;
     }
+
+    @Basic
+    @Column(name = "archived", columnDefinition = "TINYINT(1)")
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) { this.archived = archived; }
 
     @Basic
     @Column(name = "start_date")
@@ -52,6 +61,7 @@ public class RentalsEntity {
         RentalsEntity that = (RentalsEntity) o;
 
         if (rentId != that.rentId) return false;
+        if (archived != that.archived) return false;
         if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
         if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;
 
