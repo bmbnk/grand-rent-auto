@@ -12,10 +12,10 @@ public class EmployeesEntity {
     private String password;
     private String eMail;
     private Integer phoneNumber;
-    private Byte isAdmin;
+    private boolean isAdmin;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employees_id")
     public int getEmployeesId() {
         return employeesId;
@@ -86,12 +86,12 @@ public class EmployeesEntity {
     }
 
     @Basic
-    @Column(name = "is_admin")
-    public Byte getIsAdmin() {
+    @Column(name = "is_admin", columnDefinition = "TINYINT(1)")
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
-    public void setIsAdmin(Byte isAdmin) {
+    public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
 
@@ -109,7 +109,7 @@ public class EmployeesEntity {
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (eMail != null ? !eMail.equals(that.eMail) : that.eMail != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
-        if (isAdmin != null ? !isAdmin.equals(that.isAdmin) : that.isAdmin != null) return false;
+        if (isAdmin != that.isAdmin) return false;
 
         return true;
     }
@@ -123,7 +123,6 @@ public class EmployeesEntity {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (eMail != null ? eMail.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
-        result = 31 * result + (isAdmin != null ? isAdmin.hashCode() : 0);
         return result;
     }
 }
