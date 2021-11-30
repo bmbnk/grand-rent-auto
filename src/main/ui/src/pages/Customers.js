@@ -1,6 +1,6 @@
 import React, { useState, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faCog, faHome, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEllipsisH, faCog, faHome, faSearch, faPlus, faEye, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
 
 import axios from 'axios';
@@ -20,48 +20,66 @@ export class CustomersTableBoot extends Component {
                     return b - a;
                 }
                 return a - b;
+            },
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.customerId}</p></React.Fragment>
             }
         }, {
             dataField: 'firstName',
-            text: 'First name'
+            text: 'First name',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.firstName}</p></React.Fragment>
+            }
         }, {
             dataField: 'lastName',
-            text: 'Last name'
+            text: 'Last name',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.lastName}</p></React.Fragment>
+            }
         }, {
             dataField: 'eMail',
-            text: 'E-mail'
+            text: 'E-mail',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.eMail}</p></React.Fragment>
+            }
         }, {
             dataField: 'phoneNumber',
-            text: 'Phone number'
+            text: 'Phone number',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.phoneNumber}</p></React.Fragment>
+            }
         }, {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
-            // formatter: (cellContent, row, rowIndex, extraDataJson) => {
-            //     const parsedExtraData = JSON.parse(extraDataJson);
-            //     const carUuid = row.carId;
-            //     const cars = parsedExtraData.cars;
-            //     var dataIndex = cars.findIndex(cars => cars.carId === carUuid);
+            formatExtraData: { setShowDelete: this.props.openDelete, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit },
+            formatter: (cellContent, row, rowIndex, extraDataJson) => {
+                const customerUuid = row.customerId;
 
-            //     return (
-            //         <Dropdown
-            //             onDropdownItemClick={(action) => {
-            //                 switch (action) {
-            //                     case 'RENT_CAR':
-            //                         break;
-            //                     case 'VIEW_CAR':
-            //                         break;
-            //                     case 'EDIT_CAR':
-            //                         break;
-            //                     case 'DELETE_CAR':
-            //                         break;
-            //                     default:
-            //                         return;
-            //                 }
-            //             }}
-            //         />
-            //     )
-            // }
+                return (
+                    <React.Fragment>
+                        <Dropdown>
+                            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+                                <span className="icon icon-sm">
+                                    <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                                </span>
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDetails(customerUuid)}>
+                                    <FontAwesomeIcon icon={faEye} className="me-2" /> View customer
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowEdit(customerUuid)}>
+                                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit customer
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(customerUuid)} className="text-danger">
+                                    <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </React.Fragment>
+                )
+            }
         }]
     }
 
@@ -78,28 +96,8 @@ export class CustomersTableBoot extends Component {
         return (
             <Card border="light" className="table-wrapper table-responsive shadow-sm">
                 <Card.Body className="px-4">
-                    <BootstrapTable hover className="user-table align-items-center" keyField='customerId' data={this.state.customers} columns={this.state.columns} bordered={false}/>
+                    <BootstrapTable hover className="user-table align-items-center" keyField='customerId' data={this.state.customers} columns={this.state.columns} bordered={false} />
                 </Card.Body>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>5</b> out of <b>25</b> entries
-                    </small>
-                </Card.Footer>
             </Card>
         )
     }
@@ -126,12 +124,48 @@ export default () => {
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                    <AddCustomerForm />
+                    <Card border="light" className="bg-white shadow-sm mb-4">
+                        <Card.Body>
+                            <h5 className="mb-4">Personal data</h5>
+                            <Form>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="firstName">
+                                            <Form.Label>First name</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter first name" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="lastName">
+                                            <Form.Label>Last name</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter last name" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="eMail">
+                                            <Form.Label>E-mail</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter e-mail" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="phoneNumber">
+                                            <Form.Label>Phone number</Form.Label>
+                                            <Form.Control required type="text" placeholder="e.g. 123456789" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="secondary" type="submit">
+                                        Add
+                                    </Button>
+                                </Row>
+                            </Form>
+                        </Card.Body>
+                    </Card >
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Add
-                    </Button>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
                         Cancel
                     </Button>

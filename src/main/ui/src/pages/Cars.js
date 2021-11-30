@@ -1,6 +1,6 @@
 import React, { useState, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faCog, faHome, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEllipsisH, faCog, faHome, faSearch, faPlus, faEye, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, DropdownButton, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
 
 import dots from "../assets/img/icons/dots.svg"
@@ -29,6 +29,9 @@ export class CarsTableBoot extends Component {
                     return b - a;
                 }
                 return a - b;
+            },
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.carId}</p></React.Fragment>
             }
         }, {
             dataField: 'carClass',
@@ -125,40 +128,32 @@ export class CarsTableBoot extends Component {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
-            formatExtraData: { setShowDelete: this.props.openDelete },
+            formatExtraData: { setShowDelete: this.props.openDelete, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit },
             formatter: (cellContent, row, rowIndex, extraDataJson) => {
                 const carUuid = row.carId;
 
                 return (
                     <React.Fragment>
                         <Dropdown>
-                            <Dropdown.Toggle id="dropdown-basic">
-                                ACTIONS
+                            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+                                <span className="icon icon-sm">
+                                    <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                                </span>
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)}>Delete</Dropdown.Item>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDetails(carUuid)}>
+                                    <FontAwesomeIcon icon={faEye} className="me-2" /> View car
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowEdit(carUuid)}>
+                                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit car
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)} className="text-danger">
+                                    <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                                </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </React.Fragment>
-                    // <Dropdown
-                    //     onDropdownItemClick={(action) => {
-                    //         switch (action) {
-                    //             case 'RENT_CAR':
-                    //                 break;
-                    //             case 'VIEW_CAR':
-                    //                 break;
-                    //             case 'EDIT_CAR':
-                    //                 break;
-                    //             case 'DELETE_CAR':
-                    //                 break;
-                    //             default:
-                    //                 return;
-                    //         }
-                    //     }}
-                    // />
                 )
             }
         }]
@@ -200,26 +195,6 @@ export class CarsTableBoot extends Component {
                         }
                     </ToolkitProvider>
                 </Card.Body>
-                <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-                    <Nav>
-                        <Pagination className="mb-2 mb-lg-0">
-                            <Pagination.Prev>
-                                Previous
-                            </Pagination.Prev>
-                            <Pagination.Item active>1</Pagination.Item>
-                            <Pagination.Item>2</Pagination.Item>
-                            <Pagination.Item>3</Pagination.Item>
-                            <Pagination.Item>4</Pagination.Item>
-                            <Pagination.Item>5</Pagination.Item>
-                            <Pagination.Next>
-                                Next
-                            </Pagination.Next>
-                        </Pagination>
-                    </Nav>
-                    <small className="fw-bold">
-                        Showing <b>5</b> out of <b>25</b> entries
-                    </small>
-                </Card.Footer>
             </Card >
         )
     }
@@ -229,27 +204,82 @@ export default () => {
     const [showDefault, setShowDefault] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [uuid, setUuid] = useState(null);
-    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false);
+    const [carInfo, setCarInfo] = useState(null);
+    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false);
+
+    const handleAdd = (event) => {
+        event.preventDefault()
+
+        fetch(Url + 'cars', {
+            method: 'POST',
+            body: JSON.stringify({
+                brand: event.target[0].value,
+                carClass: event.target[6].value,
+                engineCapacity: event.target[3].value,
+                engineType: event.target[5].value,
+                mileage: event.target[4].value,
+                model: event.target[1].value,
+                pricePerDay: event.target[7].value,
+                seatingCapacity: event.target[2].value,
+                status: 'available'
+            }),
+            headers: { 'Content-Type': 'application/json' },
+        })
+
+        handleClose();
+        window.location.reload(false);
+    }
+
+    const handleEdit = (event) => {
+        event.preventDefault()
+
+        fetch(Url + 'cars/' + uuid, {
+            method: 'PUT',
+            body: JSON.stringify({
+                brand: event.target[0].value,
+                carClass: event.target[6].value,
+                engineCapacity: event.target[3].value,
+                engineType: event.target[5].value,
+                mileage: event.target[4].value,
+                model: event.target[1].value,
+                pricePerDay: event.target[7].value,
+                seatingCapacity: event.target[2].value,
+                status: event.target[8]
+        }),
+            headers: { 'Content-Type': 'application/json' },
+        })
+
+        // handleClose();
+        // window.location.reload(false);
+    }
 
     function deleteCar(uuid, url) {
-        // axios.delete(url + 'cars/' + uuid)
+        axios.delete(url + 'cars/' + uuid)
+        handleClose();
+        window.location.reload(false);
+        // fetch(url + 'cars/' + uuid, {
+        //     method: 'DELETE',
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         "Access-Control-Allow-Origin": "*",
+        //         "Accept": "*/*",
+        //         "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+        //         "Access-Control-Allow-Headers":"Content-Type,Content-Length,Server,Date",
+        //         "Access-Control-Allow-Methods": "GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
+        //         "Access-Control-Expose-Headers": "Content-Type, Content-Length, Server, Date"
+        //     }
+        // })
+        //     .then(res => res.text())
+        //     .then(res => console.log(res))
+    }
 
-        //window.location.reload(false);
-            fetch(url + 'cars/' + uuid, {
-                method: 'DELETE',
-                headers: {
-                    "Content-Type":"application/json", 
-                    "Access-Control-Allow-Origin":"*",
-                    "Accept":"*/*", 
-                    "Access-Control-Allow-Headers":"Origin, Content-Type, X-Auth-Token",
-                    //"Access-Control-Allow-Headers":"Content-Type,Content-Length,Server,Date",
-                    "Access-Control-Allow-Methods":"GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
-                    "Access-Control-Expose-Headers":"Content-Type, Content-Length, Server, Date"
-                }
+    function getCar(uuid) {
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars/' + uuid)
+            .then((response) => {
+                setCarInfo(response.data);
             })
-                .then(res => res.text())
-                .then(res => console.log(res))
     }
 
     return (
@@ -261,18 +291,105 @@ export default () => {
                 centered
                 show={showDefault}
                 onHide={handleClose}
+                onSubmit={handleAdd}
             >
                 <Modal.Header>
                     <Modal.Title className="h6">Add a new car</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                    <AddCarForm />
+                    <Card border="light" className="bg-white shadow-sm mb-4">
+                        <Card.Body>
+                            <h5 className="mb-4">General information</h5>
+                            <Form>
+                                <Row>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="brand">
+                                            <Form.Label>Brand</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter car's brand" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="model">
+                                            <Form.Label>Model</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter car's model" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="seatingCapacity">
+                                            <Form.Label>Seating Capacity</Form.Label>
+                                            <Form.Control required type="number" placeholder="No. of seats" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="engineCapacity">
+                                            <Form.Label>Engine Capacity</Form.Label>
+                                            <Form.Control required type="float" placeholder="e.g. 1.9 l" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="mileage">
+                                            <Form.Label>Mileage</Form.Label>
+                                            <Form.Control required type="number" placeholder="e.g. 250000 km" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Select car's engine type</Form.Label>
+                                            <Form.Select id="engineType" defaultValue="petrol">
+                                                <option value="petrol">Petrol</option>
+                                                <option value="diesel">Diesel</option>
+                                                <option value="hybrid">Hybrid</option>
+                                                <option value="electric">Electric</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Select car's class</Form.Label>
+                                            <Form.Select id="carClass" defaultValue="economic">
+                                                <option value="economic">Economic</option>
+                                                <option value="premium">Premium</option>
+                                                <option value="family">Family</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="price">
+                                            <Form.Label>Price per day</Form.Label>
+                                            <Form.Control required type="number" placeholder="e.g. 120 zł" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <h5 className="mb-4">Additional information (optional)</h5>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Notes</Form.Label>
+                                            <Form.Control type="text" placeholder="Enter notes here" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Add photos</Form.Label>
+                                            <Form.Control type="file" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="secondary" type="submit">
+                                        Add
+                                    </Button>
+                                </Row>
+                            </Form>
+                        </Card.Body>
+                    </Card >
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Add
-                    </Button>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
                         Cancel
                     </Button>
@@ -299,7 +416,7 @@ export default () => {
                 </Modal.Footer>
             </Modal>
 
-            {/*Show car's details - modal*/}
+            {/* Show car's details - modal */}
 
             <Modal as={Modal.Dialog} centered show={showDetails} onHide={handleClose}>
                 <Modal.Header>
@@ -307,14 +424,143 @@ export default () => {
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Define details here</p>
+                        <p style={{ textTransform: 'capitalize' }}>Class: {carInfo?.carClass || ""}</p>
+                        <p>Brand: {carInfo?.brand || ""}</p>
+                        <p>Model: {carInfo?.model || ""}</p>
+                        <p>Seating capacity: {carInfo?.seatingCapacity + ' persons' || ""}</p>
+                        <p>Engine capacity: {carInfo?.engineCapacity + ' l' || ""}</p>
+                        <p style={{ textTransform: 'capitalize' }}>Engine type: {carInfo?.engineType || ""}</p>
+                        <p>Mileage: {carInfo?.mileage + ' km' || ""}</p>
+                        <p>Car price: {carInfo?.pricePerDay + ' zł / day'|| ""}</p>
+                        <p style={{ textTransform: 'capitalize' }}> Status: {carInfo?.status || ""}</p>
+                        <p>Notes: {carInfo?.notes || ""}</p>
+                        <p>Photos: {carInfo?.photos || ""}</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="warning" onClick={handleClose}>
-                        Rent
-                    </Button>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
                         Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/*Edit car's details - modal*/}
+
+            <Modal as={Modal.Dialog}
+                size="lg"
+                centered
+                show={showEdit}
+                onHide={handleClose}
+                onSubmit={handleEdit}
+            >
+                <Modal.Header>
+                    <Modal.Title className="h6">Edit this car</Modal.Title>
+                    <Button variant="close" aria-label="Close" onClick={handleClose} />
+                </Modal.Header>
+                <Modal.Body>
+                    <Card border="light" className="bg-white shadow-sm mb-4">
+                        <Card.Body>
+                            <h5 className="mb-4">General information</h5>
+                            <Form>
+                                <Row>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="brand">
+                                            <Form.Label>Brand</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter car's brand" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="model">
+                                            <Form.Label>Model</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter car's model" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="seatingCapacity">
+                                            <Form.Label>Seating Capacity</Form.Label>
+                                            <Form.Control required type="number" placeholder="No. of seats" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="engineCapacity">
+                                            <Form.Label>Engine Capacity</Form.Label>
+                                            <Form.Control required type="float" placeholder="e.g. 1.9 l" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="mileage">
+                                            <Form.Label>Mileage</Form.Label>
+                                            <Form.Control required type="number" placeholder="e.g. 250000 km" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Select car's engine type</Form.Label>
+                                            <Form.Select id="engineType" defaultValue="petrol">
+                                                <option value="petrol">Petrol</option>
+                                                <option value="diesel">Diesel</option>
+                                                <option value="hybrid">Hybrid</option>
+                                                <option value="electric">Electric</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Select car's class</Form.Label>
+                                            <Form.Select id="carClass" defaultValue="economic">
+                                                <option value="economic">Economic</option>
+                                                <option value="premium">Premium</option>
+                                                <option value="family">Family</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group id="price">
+                                            <Form.Label>Price per day</Form.Label>
+                                            <Form.Control required type="number" placeholder="e.g. 120 zł" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Select car's status</Form.Label>
+                                            <Form.Select id="carClass" defaultValue="economic">
+                                                <option value="available">Available</option>
+                                                <option value="rented">Rented</option>
+                                                <option value="renovation">Renovation</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <h5 className="mb-4">Additional information (optional)</h5>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Notes</Form.Label>
+                                            <Form.Control type="text" placeholder="Enter notes here" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Add photos</Form.Label>
+                                            <Form.Control type="file" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="secondary" type="submit" onClick={(uuid) => { handleEdit(); setUuid(uuid) }}>
+                                        Edit
+                                    </Button>
+                                </Row>
+                            </Form>
+                        </Card.Body>
+                    </Card >
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
+                        Cancel
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -334,7 +580,7 @@ export default () => {
                     <span>New</span>
                 </Button>
             </div>
-            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} />
+            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCar(uuid) }} />
         </>
     )
 }
