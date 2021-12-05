@@ -20,7 +20,6 @@ public class EmployeesResource {
     public Response getAllEmployees() {
         return Response
                 .ok(empolyeesService.getAllEmployees())
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -32,13 +31,11 @@ public class EmployeesResource {
         if(employee != null) {
             return Response
                     .ok(employee)
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         }
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -48,13 +45,11 @@ public class EmployeesResource {
         if(empolyeesService.removeEmployeeById(id)) {
             return Response
                     .noContent()
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         }
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -65,7 +60,6 @@ public class EmployeesResource {
         return Response
                 .status(201)
                 .entity(empolyeesService.addEmployee(employee))
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -78,13 +72,11 @@ public class EmployeesResource {
         if(employee != null) {
             return Response
                     .ok(empolyeesService.editEmployee(employee, editedEmployee))
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         }
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 }

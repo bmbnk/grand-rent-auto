@@ -23,7 +23,6 @@ public class CustomersResource {
     public Response getAllCustomers() {
         return Response
                 .ok(customersService.getAllCustomers())
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -35,13 +34,11 @@ public class CustomersResource {
         if(customer != null) {
             return Response
                     .ok(customer)
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         }
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -51,13 +48,11 @@ public class CustomersResource {
         if(customersService.removeCustomerById(id)) {
             return Response
                     .noContent()
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         }
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -68,7 +63,6 @@ public class CustomersResource {
         return Response
                 .status(201)
                 .entity(customersService.addCustomer(customer))
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -81,13 +75,11 @@ public class CustomersResource {
         if(customer != null) {
             return Response
                     .ok(customersService.editCustomer(customer, editedCustomer))
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         }
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 

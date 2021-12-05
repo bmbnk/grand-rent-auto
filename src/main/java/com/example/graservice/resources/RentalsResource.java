@@ -24,12 +24,10 @@ public class RentalsResource {
             return Response
                     .status(Response.Status.CREATED)
                     .entity(rentalsService.addRental(rental))
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         return Response
                 .status(Response.Status.FORBIDDEN)
                 .entity(errorMessage)
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 }

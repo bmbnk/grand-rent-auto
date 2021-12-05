@@ -24,7 +24,6 @@ public class CarsResource {
     public Response getAllCars() {
         return  Response
                 .ok(carsService.getAllCars())
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -36,12 +35,10 @@ public class CarsResource {
         if (car != null)
             return Response
                     .ok(car)
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -51,12 +48,10 @@ public class CarsResource {
         if (carsService.removeCarById(id))
             return Response
                     .noContent()
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -68,7 +63,6 @@ public class CarsResource {
         return Response
                 .status(Response.Status.CREATED)
                 .entity(carsService.addCar(car))
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -84,20 +78,17 @@ public class CarsResource {
                 rentalsService.archiveRentalById(rentId);
                 return Response
                         .ok(carsService.updateReturnedCar(carId, carUpdateData))
-                        .header("Access-Control-Allow-Origin", "*")
                         .build();
             } else {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity(errorMessage)
-                        .header("Access-Control-Allow-Origin", "*")
                         .build();
             }
         }
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity("This car is not rented.")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 
@@ -110,12 +101,10 @@ public class CarsResource {
         if (car != null)
             return Response
                     .ok(carsService.editCar(car, editedCar))
-                    .header("Access-Control-Allow-Origin", "*")
                     .build();
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity("")
-                .header("Access-Control-Allow-Origin", "*")
                 .build();
     }
 }
