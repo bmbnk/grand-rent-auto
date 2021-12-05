@@ -51,6 +51,6 @@ public class EmpolyeesService {
         targetEmployee.setPassword(employee.getPassword());
         targetEmployee.seteMail(employee.geteMail());
         targetEmployee.setPhoneNumber(employee.getPhoneNumber());
-        targetEmployee.setIsAdmin(employee.getIsAdmin());
+        targetEmployee.setAdmin(employee.isAdmin());
     }
 }

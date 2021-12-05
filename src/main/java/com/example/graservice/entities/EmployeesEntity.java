@@ -87,11 +87,11 @@ public class EmployeesEntity {
 
     @Basic
     @Column(name = "is_admin", columnDefinition = "TINYINT(1)")
-    public boolean getIsAdmin() {
+    public boolean isAdmin() {
         return isAdmin;
     }
 
-    public void setIsAdmin(boolean isAdmin) {
+    public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
 
