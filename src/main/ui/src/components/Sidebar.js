@@ -120,7 +120,7 @@ export default (props = {}) => {
                             <NavItem title="Cars" icon={faCar} link={Routes.Cars.path}/>
                             <NavItem title="Rentals" icon={faFile} link={Routes.Rentals.path}/>
                             <NavItem title="Customers" icon={faUser} link={Routes.Customers.path}/>
-                            <NavItem title="Users" icon={faUsers} link={Routes.Users.path}/>
+                            <NavItem title="Employees" icon={faUsers} link={Routes.Employees.path}/>
                             <NavItem title="Settings" icon={faCog} link={Routes.Settings.path}/>
                         </Nav>
                     </div>

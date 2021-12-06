@@ -32,7 +32,8 @@ export default () => {
                                 <ul className="docs-list">
                                     <li>The Cars tab will take you to your cars list,</li>
                                     <li>The Rentals tab is used to monitor active and archived rentals, </li>
-                                    <li>You can use the Users tab to manage users, </li>
+                                    <li>You can use the Customers tab to manage customers, </li>
+                                    <li>You can use the Employees tab to manage employees, </li>
                                     <li>In the Settings tab, you can adjust all the necessary settings. </li>
                                 </ul>
                                 <p>We wish you a pleasant time using our portal. In case of any problems do not hesiteate to contact us at <a href="mailto:help@gra.com">help@gra.com</a> </p>

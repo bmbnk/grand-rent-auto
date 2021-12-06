@@ -6,7 +6,7 @@ import {Routes} from "../routes";
 import Presentation from "./Presentation";
 import Cars from "./Cars";
 import Rentals from "./Rentals";
-import Users from "./Users";
+import Employees from "./Employees";
 import Customers from "./Customers";
 import Upgrade from "./Upgrade";
 import DashboardOverview from "./dashboard/DashboardOverview";
@@ -118,7 +118,7 @@ export default () => (
         <RouteWithSidebar exact path={Routes.Cars.path} component={Cars}/>
         <RouteWithSidebar exact path={Routes.Rentals.path} component={Rentals}/>
         <RouteWithSidebar exact path={Routes.Customers.path} component={Customers}/>
-        <RouteWithSidebar exact path={Routes.Users.path} component={Users}/>
+        <RouteWithSidebar exact path={Routes.Employees.path} component={Employees}/>
         <RouteWithSidebar exact path={Routes.Upgrade.path} component={Upgrade}/>
         <RouteWithSidebar exact path={Routes.Transactions.path} component={Transactions}/>
         <RouteWithSidebar exact path={Routes.Settings.path} component={Settings}/>

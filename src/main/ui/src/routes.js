@@ -5,7 +5,7 @@ export const Routes = {
     Transactions: {path: "/transactions"},
     Cars: {path: "/cars"},
     Rentals: {path: "/rentals"},
-    Users: {path: "/users"},
+    Employees: {path: "/employees"},
     Customers: {path: "/customers"},
     Settings: {path: "/settings"},
     Upgrade: {path: "/upgrade"},

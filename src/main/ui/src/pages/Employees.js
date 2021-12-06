@@ -7,11 +7,11 @@ import axios from 'axios';
 
 import BootstrapTable from "react-bootstrap-table-next";
 
-export class CustomersTableBoot extends Component {
+export class EmployeesTableBoot extends Component {
     state = {
-        customers: [],
+        employees: [],
         columns: [{
-            dataField: 'customerId',
+            dataField: 'employeesId',
             text: 'ID',
             sort: true,
             sortFunc: (a, b, order) => {
@@ -21,7 +21,7 @@ export class CustomersTableBoot extends Component {
                 return a - b;
             },
             formatter: (cellContent, row) => {
-                return <React.Fragment> <p> {row.customerId}</p></React.Fragment>
+                return <React.Fragment> <p> {row.employeesId}</p></React.Fragment>
             }
         }, {
             dataField: 'firstName',
@@ -36,6 +36,18 @@ export class CustomersTableBoot extends Component {
                 return <React.Fragment> <p> {row.lastName}</p></React.Fragment>
             }
         }, {
+            dataField: 'login',
+            text: 'Login',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.login}</p></React.Fragment>
+            }
+        }, {
+            dataField: 'password',
+            text: 'Password',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.password}</p></React.Fragment>
+            }
+        }, {
             dataField: 'eMail',
             text: 'E-mail',
             formatter: (cellContent, row) => {
@@ -48,12 +60,18 @@ export class CustomersTableBoot extends Component {
                 return <React.Fragment> <p> {row.phoneNumber}</p></React.Fragment>
             }
         }, {
+            dataField: 'isAdmin',
+            text: 'AdminEmployee',
+            formatter: (cellContent, row) => {
+                return <React.Fragment> <p> {row.isAdmin}</p></React.Fragment>
+            }
+        }, {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
             formatExtraData: { setShowDelete: this.props.openDelete, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit },
             formatter: (cellContent, row, rowIndex, extraDataJson) => {
-                const customerUuid = row.customerId;
+                const employeeUuid = row.employeesId;
 
                 return (
                     <React.Fragment>
@@ -65,13 +83,13 @@ export class CustomersTableBoot extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowDetails(customerUuid)}>
-                                    <FontAwesomeIcon icon={faEye} className="me-2" /> View customer
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDetails(employeeUuid)}>
+                                    <FontAwesomeIcon icon={faEye} className="me-2" /> View employee
                                 </Dropdown.Item>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowEdit(customerUuid)}>
-                                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit customer
+                                <Dropdown.Item onClick={() => extraDataJson.setShowEdit(employeeUuid)}>
+                                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit employee
                                 </Dropdown.Item>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(customerUuid)} className="text-danger">
+                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(employeeUuid)} className="text-danger">
                                     <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
                                 </Dropdown.Item>
                             </Dropdown.Menu>
@@ -83,10 +101,10 @@ export class CustomersTableBoot extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers')
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees')
             .then(response => {
                 this.setState({
-                    customers: response.data
+                    employees: response.data
                 });
             });
     }
@@ -95,7 +113,7 @@ export class CustomersTableBoot extends Component {
         return (
             <Card border="light" className="table-wrapper table-responsive shadow-sm">
                 <Card.Body className="px-4">
-                    <BootstrapTable hover className="user-table align-items-center" keyField='customerId' data={this.state.customers} columns={this.state.columns} bordered={false} />
+                    <BootstrapTable hover className="user-table align-items-center" keyField='employeesId' data={this.state.employees} columns={this.state.columns} bordered={false} />
                 </Card.Body>
             </Card>
         )
@@ -108,19 +126,22 @@ export default () => {
     const [showDetails, setShowDetails] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [uuid, setUuid] = useState(null);
-    const [customerInfo, setCustomerInfo] = useState(null);
+    const [employeeInfo, setEmployeeInfo] = useState(null);
     const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false);
 
     const handleAdd = (event) => {
         event.preventDefault()
 
-        fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers', {
+        fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees', {
             method: 'POST',
             body: JSON.stringify({
                 firstName: event.target[0].value,
                 lastName: event.target[1].value,
-                eMail: event.target[2].value,
-                phoneNumber: event.target[3].value
+                login: event.target[2].value,
+                password: event.target[3].value,
+                eMail: event.target[4].value,
+                phoneNumber: event.target[5].value, 
+                isAdmin: 'true'
             }),
             headers: { 'Content-Type': 'application/json' },
         })
@@ -132,13 +153,16 @@ export default () => {
     const handleEdit = (event) => {
         event.preventDefault()
 
-        fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid, {
+        fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid, {
             method: 'PUT',
             body: JSON.stringify({
                 firstName: event.target[0].value,
                 lastName: event.target[1].value,
-                eMail: event.target[2].value,
-                phoneNumber: event.target[3].value
+                login: event.target[2].value,
+                password: event.target[3].value,
+                eMail: event.target[4].value,
+                phoneNumber: event.target[5].value, 
+                isAdmin: 'true'
         }),
             headers: { 'Content-Type': 'application/json' },
         })
@@ -147,22 +171,22 @@ export default () => {
         // window.location.reload(false);
     }
 
-    function deleteCustomer(uuid) {
-        axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid)
+    function deleteEmployee(uuid) {
+        axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid)
         handleClose();
         window.location.reload(false);
     }
 
-    function getCustomer(uuid) {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid)
+    function getEmployee(uuid) {
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid)
             .then((response) => {
-                setCustomerInfo(response.data);
+                setEmployeeInfo(response.data);
             })
     }
 
     return (
         <>
-            {/*Adding a new customer - modal*/}
+            {/*Adding a new employee - modal*/}
 
             <Modal
                 size="lg"
@@ -172,7 +196,7 @@ export default () => {
                 onSubmit={handleAdd}
             >
                 <Modal.Header>
-                    <Modal.Title className="h6">Add a new customer</Modal.Title>
+                    <Modal.Title className="h6">Add a new employee</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
@@ -196,6 +220,20 @@ export default () => {
                                 </Row>
                                 <Row>
                                     <Col md={6} className="mb-3">
+                                        <Form.Group id="login">
+                                            <Form.Label>Login</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter login" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="password">
+                                            <Form.Label>Password</Form.Label>
+                                            <Form.Control required type="text" placeholder="Enter password" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} className="mb-3">
                                         <Form.Group id="eMail">
                                             <Form.Label>E-mail</Form.Label>
                                             <Form.Control required type="text" placeholder="Enter e-mail" />
@@ -205,6 +243,14 @@ export default () => {
                                         <Form.Group id="phoneNumber">
                                             <Form.Label>Phone number</Form.Label>
                                             <Form.Control required type="text" placeholder="e.g. 123456789" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="isAdmin">
+                                            <Form.Label>Is admin</Form.Label>
+                                            <Form.Control required type="text" placeholder="Admin employee?" />
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -224,18 +270,18 @@ export default () => {
                 </Modal.Footer>
             </Modal>
 
-            {/*Delete a customer - modal*/}
+            {/*Delete an employee - modal*/}
 
             <Modal as={Modal.Dialog} centered show={showDelete} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title className="h6">Delete customer</Modal.Title>
+                    <Modal.Title className="h6">Delete employee</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Are you sure you want to delete this customer?</p>
+                    <p>Are you sure you want to delete this employee?</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => deleteCustomer(uuid)}>
+                    <Button variant="danger" onClick={() => deleteEmployee(uuid)}>
                         Delete
                     </Button>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
@@ -244,19 +290,22 @@ export default () => {
                 </Modal.Footer>
             </Modal>
 
-            {/*Show customer's details - modal*/}
+            {/*Show employee's details - modal*/}
 
             <Modal as={Modal.Dialog} centered show={showDetails} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title className="h6">Customer Details</Modal.Title>
+                    <Modal.Title className="h6">Employee Details</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                        <p>ID: {customerInfo?.customerId || ""}</p>
-                        <p>First name: {customerInfo?.firstName || ""}</p>
-                        <p>Last name: {customerInfo?.lastName || ""}</p>
-                        <p>E-mail: {customerInfo?.eMail || ""}</p>
-                        <p>Phone number: {customerInfo?.phoneNumber || ""}</p>
+                        <p>ID: {employeeInfo?.employeesId || ""}</p>
+                        <p>First name: {employeeInfo?.firstName || ""}</p>
+                        <p>Last name: {employeeInfo?.lastName || ""}</p>
+                        <p>Login: {employeeInfo?.login || ""}</p>
+                        <p>Password: {employeeInfo?.password || ""}</p>
+                        <p>E-mail: {employeeInfo?.eMail || ""}</p>
+                        <p>Phone number: {employeeInfo?.phoneNumber || ""}</p>
+                        <p>Is admin? {employeeInfo?.isAdmin || ""}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
@@ -265,7 +314,7 @@ export default () => {
                 </Modal.Footer>
             </Modal>
 
-            {/*Edit user's details - modal*/}
+            {/*Edit employee's details - modal*/}
 
             <Modal as={Modal.Dialog}
                 size="lg"
@@ -275,7 +324,7 @@ export default () => {
                 onSubmit={handleEdit}
             >
                 <Modal.Header>
-                    <Modal.Title className="h6">Edit this car</Modal.Title>
+                    <Modal.Title className="h6">Edit this employee</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
@@ -392,17 +441,17 @@ export default () => {
                     <Breadcrumb className="d-none d-md-inline-block"
                         listProps={{ className: "breadcrumb-dark breadcrumb-transparent" }}>
                         <Breadcrumb.Item href="/#"><FontAwesomeIcon icon={faHome} /></Breadcrumb.Item>
-                        <Breadcrumb.Item active>Customers</Breadcrumb.Item>
+                        <Breadcrumb.Item active>Employees</Breadcrumb.Item>
                     </Breadcrumb>
-                    <h4>Customers</h4>
-                    <p className="mb-0">Your company's customers. </p>
+                    <h4>Employees</h4>
+                    <p className="mb-0">Your company's employees. </p>
                 </div>
                 <Button variant="primary" className="m-1" onClick={() => setShowDefault(true)}>
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
                     <span>New</span>
                 </Button>
             </div>
-            <CustomersTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCustomer(uuid) }} />
+            <EmployeesTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getEmployee(uuid) }} />
         </>
     )
 }
