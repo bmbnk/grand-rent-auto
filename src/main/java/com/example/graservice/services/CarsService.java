@@ -1,7 +1,7 @@
 package com.example.graservice.services;
 
 import com.example.graservice.entities.CarsEntity;
-import com.example.graservice.entities.enums.CarStatus;
+import com.example.graservice.enums.CarStatus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.json.JsonObject;
 import jakarta.persistence.EntityManager;

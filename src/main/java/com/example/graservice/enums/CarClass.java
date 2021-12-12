@@ -1,4 +1,4 @@
-package com.example.graservice.entities.enums;
+package com.example.graservice.enums;
 
 public enum CarClass {
     premium, economic, family

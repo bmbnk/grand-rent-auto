@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "customers", schema = "gra", catalog = "")
-public class CustomersEntity {
+public class CustomersEntity implements IUser {
     private int customerId;
     private String firstName;
     private String lastName;
     private String eMail;
     private Integer phoneNumber;
+    private String hashPwd;
+    private String saltPwd;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +64,26 @@ public class CustomersEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    @Basic
+    @Column(name = "hash_pwd")
+    public String getHashPwd() {
+        return hashPwd;
+    }
+
+    public void setHashPwd(String hashPwd) {
+        this.hashPwd = hashPwd;
+    }
+
+    @Basic
+    @Column(name = "salt_pwd")
+    public String getSaltPwd() {
+        return saltPwd;
+    }
+
+    public void setSaltPwd(String saltPwd) {
+        this.saltPwd = saltPwd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,6 +96,8 @@ public class CustomersEntity {
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
         if (eMail != null ? !eMail.equals(that.eMail) : that.eMail != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
+        if (hashPwd != null ? !hashPwd.equals(that.hashPwd) : that.hashPwd != null) return false;
+        if (saltPwd != null ? !saltPwd.equals(that.saltPwd) : that.saltPwd != null) return false;
 
         return true;
     }
@@ -85,6 +109,12 @@ public class CustomersEntity {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (eMail != null ? eMail.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (hashPwd != null ? hashPwd.hashCode() : 0);
+        result = 31 * result + (saltPwd != null ? saltPwd.hashCode() : 0);
+
         return result;
     }
+
+    @SuppressWarnings("JpaAttributeMemberSignatureInspection")
+    public int getId() { return customerId; }
 }

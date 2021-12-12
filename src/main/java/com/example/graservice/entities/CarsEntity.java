@@ -1,6 +1,6 @@
 package com.example.graservice.entities;
 
-import com.example.graservice.entities.enums.*;
+import com.example.graservice.enums.*;
 import jakarta.persistence.*;
 
 @Entity

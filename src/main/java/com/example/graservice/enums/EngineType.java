@@ -1,4 +1,4 @@
-package com.example.graservice.entities.enums;
+package com.example.graservice.enums;
 
 public enum EngineType {
         petrol, diesel, lpg, hybrid, electric

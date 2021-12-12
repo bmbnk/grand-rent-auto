@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "employees", schema = "gra", catalog = "")
-public class EmployeesEntity {
+public class EmployeesEntity implements IUser {
     private int employeesId;
     private String firstName;
     private String lastName;
-    private String login;
-    private String password;
     private String eMail;
     private Integer phoneNumber;
+    private String hashPwd;
+    private String saltPwd;
     private boolean isAdmin;
 
     @Id
@@ -46,26 +46,6 @@ public class EmployeesEntity {
     }
 
     @Basic
-    @Column(name = "login")
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    @Basic
-    @Column(name = "password")
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Basic
     @Column(name = "e_mail")
     public String geteMail() {
         return eMail;
@@ -83,6 +63,26 @@ public class EmployeesEntity {
 
     public void setPhoneNumber(Integer phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Basic
+    @Column(name = "hash_pwd")
+    public String getHashPwd() {
+        return hashPwd;
+    }
+
+    public void setHashPwd(String hashPwd) {
+        this.hashPwd = hashPwd;
+    }
+
+    @Basic
+    @Column(name = "salt_pwd")
+    public String getSaltPwd() {
+        return saltPwd;
+    }
+
+    public void setSaltPwd(String saltPwd) {
+        this.saltPwd = saltPwd;
     }
 
     @Basic
@@ -105,10 +105,10 @@ public class EmployeesEntity {
         if (employeesId != that.employeesId) return false;
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
-        if (login != null ? !login.equals(that.login) : that.login != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (eMail != null ? !eMail.equals(that.eMail) : that.eMail != null) return false;
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
+        if (hashPwd != null ? !hashPwd.equals(that.hashPwd) : that.hashPwd != null) return false;
+        if (saltPwd != null ? !saltPwd.equals(that.saltPwd) : that.saltPwd != null) return false;
         if (isAdmin != that.isAdmin) return false;
 
         return true;
@@ -119,10 +119,14 @@ public class EmployeesEntity {
         int result = employeesId;
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (eMail != null ? eMail.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (hashPwd != null ? hashPwd.hashCode() : 0);
+        result = 31 * result + (saltPwd != null ? saltPwd.hashCode() : 0);
+
         return result;
     }
+
+    @SuppressWarnings("JpaAttributeMemberSignatureInspection")
+    public int getId() { return employeesId; }
 }

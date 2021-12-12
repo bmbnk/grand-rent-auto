@@ -4,7 +4,7 @@ import com.example.graservice.entities.CarsEntity;
 import com.example.graservice.entities.CustomersEntity;
 import com.example.graservice.entities.EmployeesEntity;
 import com.example.graservice.entities.RentalsEntity;
-import com.example.graservice.entities.enums.CarStatus;
+import com.example.graservice.enums.CarStatus;
 import com.example.graservice.utils.Formatters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.json.JsonObject;
