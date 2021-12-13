@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { useState, useRef, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHome, faPlus, faEye, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, Breadcrumb, Dropdown, Modal, Card, } from '@themesberg/react-bootstrap';
@@ -36,18 +36,6 @@ export class EmployeesTableBoot extends Component {
                 return <React.Fragment> <p> {row.lastName}</p></React.Fragment>
             }
         }, {
-            dataField: 'login',
-            text: 'Login',
-            formatter: (cellContent, row) => {
-                return <React.Fragment> <p> {row.login}</p></React.Fragment>
-            }
-        }, {
-            dataField: 'password',
-            text: 'Password',
-            formatter: (cellContent, row) => {
-                return <React.Fragment> <p> {row.password}</p></React.Fragment>
-            }
-        }, {
             dataField: 'eMail',
             text: 'E-mail',
             formatter: (cellContent, row) => {
@@ -61,9 +49,13 @@ export class EmployeesTableBoot extends Component {
             }
         }, {
             dataField: 'isAdmin',
-            text: 'AdminEmployee',
+            text: 'Is Admin?',
             formatter: (cellContent, row) => {
-                return <React.Fragment> <p> {row.isAdmin}</p></React.Fragment>
+                if (row.isAdmin == true) {
+                    return <p style={{ color: 'green' }}>Yes</p>
+                } else {
+                    return <p style={{ color: 'red' }}>No</p>
+                }
             }
         }, {
             dataField: 'actions',
@@ -101,6 +93,10 @@ export class EmployeesTableBoot extends Component {
     }
 
     componentDidMount() {
+        this.updateTable();
+    }
+
+    updateTable() {
         axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees')
             .then(response => {
                 this.setState({
@@ -127,54 +123,71 @@ export default () => {
     const [showEdit, setShowEdit] = useState(false);
     const [uuid, setUuid] = useState(null);
     const [employeeInfo, setEmployeeInfo] = useState(null);
+    const refTable = useRef(null);
     const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false);
 
     const handleAdd = (event) => {
         event.preventDefault()
+
+        var isTrue = false
+        
+        if (event.target[5].value === "false")
+        {
+            isTrue = false
+        } else if (event.target[5].value === "true") {
+            isTrue = true
+        }
 
         fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees', {
             method: 'POST',
             body: JSON.stringify({
                 firstName: event.target[0].value,
                 lastName: event.target[1].value,
-                login: event.target[2].value,
-                password: event.target[3].value,
-                eMail: event.target[4].value,
-                phoneNumber: event.target[5].value, 
-                isAdmin: 'true'
+                eMail: event.target[3].value,
+                password: event.target[2].value,
+                phoneNumber: new Number(event.target[4].value),
+                isAdmin: new Boolean(isTrue)
             }),
             headers: { 'Content-Type': 'application/json' },
         })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
-        window.location.reload(false);
     }
 
     const handleEdit = (event) => {
         event.preventDefault()
+
+        var isTrue = false
+        
+        if (event.target[4].value === "false")
+        {
+            isTrue = false
+        } else if (event.target[4].value === "true") {
+            isTrue = true
+        }
 
         fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid, {
             method: 'PUT',
             body: JSON.stringify({
                 firstName: event.target[0].value,
                 lastName: event.target[1].value,
-                login: event.target[2].value,
-                password: event.target[3].value,
-                eMail: event.target[4].value,
-                phoneNumber: event.target[5].value, 
-                isAdmin: 'true'
-        }),
+                eMail: event.target[2].value,
+                phoneNumber: new Number(event.target[3].value),
+                isAdmin: new Boolean(isTrue)
+            }),
             headers: { 'Content-Type': 'application/json' },
         })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
 
-        // handleClose();
-        // window.location.reload(false);
+        handleClose();
     }
 
     function deleteEmployee(uuid) {
         axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid)
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
+
         handleClose();
-        window.location.reload(false);
     }
 
     function getEmployee(uuid) {
@@ -220,37 +233,32 @@ export default () => {
                                 </Row>
                                 <Row>
                                     <Col md={6} className="mb-3">
-                                        <Form.Group id="login">
-                                            <Form.Label>Login</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter login" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={6} className="mb-3">
                                         <Form.Group id="password">
                                             <Form.Label>Password</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter password" />
+                                            <Form.Control required type="password" placeholder="Enter password" />
                                         </Form.Group>
                                     </Col>
-                                </Row>
-                                <Row>
                                     <Col md={6} className="mb-3">
                                         <Form.Group id="eMail">
                                             <Form.Label>E-mail</Form.Label>
                                             <Form.Control required type="text" placeholder="Enter e-mail" />
                                         </Form.Group>
                                     </Col>
+                                </Row>
+                                <Row>
                                     <Col md={6} className="mb-3">
                                         <Form.Group id="phoneNumber">
                                             <Form.Label>Phone number</Form.Label>
                                             <Form.Control required type="text" placeholder="e.g. 123456789" />
                                         </Form.Group>
                                     </Col>
-                                </Row>
-                                <Row>
                                     <Col md={6} className="mb-3">
                                         <Form.Group id="isAdmin">
-                                            <Form.Label>Is admin</Form.Label>
-                                            <Form.Control required type="text" placeholder="Admin employee?" />
+                                            <Form.Label>Is Admin?</Form.Label>
+                                            <Form.Select id="isAdmin" defaultValue={new Boolean(false)}>
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </Form.Select>
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -298,14 +306,12 @@ export default () => {
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                        <p>ID: {employeeInfo?.employeesId || ""}</p>
-                        <p>First name: {employeeInfo?.firstName || ""}</p>
-                        <p>Last name: {employeeInfo?.lastName || ""}</p>
-                        <p>Login: {employeeInfo?.login || ""}</p>
-                        <p>Password: {employeeInfo?.password || ""}</p>
-                        <p>E-mail: {employeeInfo?.eMail || ""}</p>
-                        <p>Phone number: {employeeInfo?.phoneNumber || ""}</p>
-                        <p>Is admin? {employeeInfo?.isAdmin || ""}</p>
+                    <p>ID: {employeeInfo?.employeesId || ""}</p>
+                    <p>First name: {employeeInfo?.firstName || ""}</p>
+                    <p>Last name: {employeeInfo?.lastName || ""}</p>
+                    <p>E-mail: {employeeInfo?.eMail || ""}</p>
+                    <p>Phone number: {employeeInfo?.phoneNumber || ""}</p>
+                    <p>Is Admin? {employeeInfo?.isAdmin?"Yes":"No"}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
@@ -316,7 +322,7 @@ export default () => {
 
             {/*Edit employee's details - modal*/}
 
-            <Modal as={Modal.Dialog}
+            <Modal
                 size="lg"
                 centered
                 show={showEdit}
@@ -330,98 +336,49 @@ export default () => {
                 <Modal.Body>
                     <Card border="light" className="bg-white shadow-sm mb-4">
                         <Card.Body>
-                            <h5 className="mb-4">General information</h5>
+                            <h5 className="mb-4">Personal data</h5>
                             <Form>
                                 <Row>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="brand">
-                                            <Form.Label>Brand</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter car's brand" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="model">
-                                            <Form.Label>Model</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter car's model" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="seatingCapacity">
-                                            <Form.Label>Seating Capacity</Form.Label>
-                                            <Form.Control required type="number" placeholder="No. of seats" />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="engineCapacity">
-                                            <Form.Label>Engine Capacity</Form.Label>
-                                            <Form.Control required type="float" placeholder="e.g. 1.9 l" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="mileage">
-                                            <Form.Label>Mileage</Form.Label>
-                                            <Form.Control required type="number" placeholder="e.g. 250000 km" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Select car's engine type</Form.Label>
-                                            <Form.Select id="engineType" defaultValue="petrol">
-                                                <option value="petrol">Petrol</option>
-                                                <option value="diesel">Diesel</option>
-                                                <option value="hybrid">Hybrid</option>
-                                                <option value="electric">Electric</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Select car's class</Form.Label>
-                                            <Form.Select id="carClass" defaultValue="economic">
-                                                <option value="economic">Economic</option>
-                                                <option value="premium">Premium</option>
-                                                <option value="family">Family</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="price">
-                                            <Form.Label>Price per day</Form.Label>
-                                            <Form.Control required type="number" placeholder="e.g. 120 zł" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Select car's status</Form.Label>
-                                            <Form.Select id="carClass" defaultValue="economic">
-                                                <option value="available">Available</option>
-                                                <option value="rented">Rented</option>
-                                                <option value="renovation">Renovation</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <h5 className="mb-4">Additional information (optional)</h5>
-                                <Row>
                                     <Col md={6} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Notes</Form.Label>
-                                            <Form.Control type="text" placeholder="Enter notes here" />
+                                        <Form.Group id="firstName">
+                                            <Form.Label>First name</Form.Label>
+                                            <Form.Control required type="text" placeholder={employeeInfo?.firstName || "Enter first name"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={6} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Add photos</Form.Label>
-                                            <Form.Control type="file" />
+                                        <Form.Group id="lastName">
+                                            <Form.Label>Last name</Form.Label>
+                                            <Form.Control required type="text" placeholder={employeeInfo?.lastName || "Enter last name"} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Button variant="secondary" type="submit" onClick={(uuid) => { handleEdit(); setUuid(uuid) }}>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="eMail">
+                                            <Form.Label>E-mail</Form.Label>
+                                            <Form.Control required type="text" placeholder={employeeInfo?.eMail || "Enter e-mail"} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="phoneNumber">
+                                            <Form.Label>Phone number</Form.Label>
+                                            <Form.Control required type="text" placeholder={employeeInfo?.phoneNumber || "e.g. 123456789"} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="isAdmin">
+                                            <Form.Label>Is Admin?</Form.Label>
+                                            <Form.Select id="isAdmin" defaultValue={employeeInfo?.isAdmin || new Boolean(false)}>
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="secondary" type="submit">
                                         Edit
                                     </Button>
                                 </Row>
@@ -451,7 +408,7 @@ export default () => {
                     <span>New</span>
                 </Button>
             </div>
-            <EmployeesTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getEmployee(uuid) }} />
+            <EmployeesTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid); getEmployee(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getEmployee(uuid) }} ref={refTable} />
         </>
     )
 }

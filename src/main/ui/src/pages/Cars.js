@@ -1,21 +1,19 @@
-import React, { useState, Component } from "react";
+import React, { useState, useRef, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEllipsisH, faCog, faHome, faSearch, faPlus, faEye, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faCheck, faEllipsisH, faCog, faHome, faSearch, faPlus, faEye, faEdit, faTrashAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, DropdownButton, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
+import Datetime from "react-datetime";
+import moment from "moment-timezone";
 
-import dots from "../assets/img/icons/dots.svg"
 
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 
 import axios from 'axios';
 
-import { AddCarForm } from "../components/Forms";
 import BootstrapTable from "react-bootstrap-table-next";
 
 const { SearchBar } = Search;
 const Url = "http://localhost:8080/gra-service-1.0-SNAPSHOT/api/";
-
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] ='*';
 
 export class CarsTableBoot extends Component {
     state = {
@@ -128,7 +126,7 @@ export class CarsTableBoot extends Component {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
-            formatExtraData: { setShowDelete: this.props.openDelete, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit },
+            formatExtraData: { setShowDelete: this.props.openDelete, setShowRent: this.props.openRent, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit },
             formatter: (cellContent, row, rowIndex, extraDataJson) => {
                 const carUuid = row.carId;
 
@@ -142,6 +140,9 @@ export class CarsTableBoot extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => extraDataJson.setShowRent(carUuid)}>
+                                    <FontAwesomeIcon icon={faCar} className="me-2" /> Rent car
+                                </Dropdown.Item>
                                 <Dropdown.Item onClick={() => extraDataJson.setShowDetails(carUuid)}>
                                     <FontAwesomeIcon icon={faEye} className="me-2" /> View car
                                 </Dropdown.Item>
@@ -160,6 +161,10 @@ export class CarsTableBoot extends Component {
     }
 
     componentDidMount() {
+        this.updateTable()
+    }
+
+    updateTable() {
         axios.get(Url + 'cars')
             .then(response => {
                 this.setState({
@@ -204,10 +209,12 @@ export default () => {
     const [showDefault, setShowDefault] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
+    const [showRent, setShowRent] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [uuid, setUuid] = useState(null);
     const [carInfo, setCarInfo] = useState(null);
-    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false);
+    const refTable = useRef(null);
+    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false) & setShowRent(false);
 
     const handleAdd = (event) => {
         event.preventDefault()
@@ -227,9 +234,9 @@ export default () => {
             }),
             headers: { 'Content-Type': 'application/json' },
         })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
-        window.location.reload(false);
     }
 
     const handleEdit = (event) => {
@@ -246,33 +253,43 @@ export default () => {
                 model: event.target[1].value,
                 pricePerDay: event.target[7].value,
                 seatingCapacity: event.target[2].value,
-                status: event.target[8]
-        }),
+                status: event.target[8].value
+            }),
             headers: { 'Content-Type': 'application/json' },
         })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
 
-        // handleClose();
-        // window.location.reload(false);
+        handleClose();
+    }
+
+    const handleRent = (event) => {
+        event.preventDefault()
+
+        fetch(Url + 'cars/' + uuid, {
+            method: 'PUT',
+            body: JSON.stringify({
+                brand: event.target[0].value,
+                carClass: event.target[6].value,
+                engineCapacity: event.target[3].value,
+                engineType: event.target[5].value,
+                mileage: event.target[4].value,
+                model: event.target[1].value,
+                pricePerDay: event.target[7].value,
+                seatingCapacity: event.target[2].value,
+                status: event.target[8].value
+            }),
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
+
+        handleClose();
     }
 
     function deleteCar(uuid, url) {
         axios.delete(url + 'cars/' + uuid)
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
+
         handleClose();
-        window.location.reload(false);
-        // fetch(url + 'cars/' + uuid, {
-        //     method: 'DELETE',
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "Access-Control-Allow-Origin": "*",
-        //         "Accept": "*/*",
-        //         "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-        //         "Access-Control-Allow-Headers":"Content-Type,Content-Length,Server,Date",
-        //         "Access-Control-Allow-Methods": "GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH",
-        //         "Access-Control-Expose-Headers": "Content-Type, Content-Length, Server, Date"
-        //     }
-        // })
-        //     .then(res => res.text())
-        //     .then(res => console.log(res))
     }
 
     function getCar(uuid) {
@@ -284,6 +301,106 @@ export default () => {
 
     return (
         <>
+            {/*Renting a car - modal*/}
+
+            <Modal
+                size="lg"
+                centered
+                show={showRent}
+                onHide={handleClose}
+                onSubmit={handleRent}
+            >
+                <Modal.Header>
+                    <Modal.Title className="h6">Rent car</Modal.Title>
+                    <Button variant="close" aria-label="Close" onClick={handleClose} />
+                </Modal.Header>
+                <Modal.Body>
+                    <Card border="light" className="bg-white shadow-sm mb-4">
+                        <Card.Body>
+                            <h5 className="mb-4">Rental information</h5>
+                            <Row>
+                                <Col md={6} className="mb-3">
+                                    <p style={{ textTransform: 'capitalize' }}>Class: {carInfo?.carClass || ""}</p>
+                                    <p>Brand: {carInfo?.brand || ""}</p>
+                                    <p>Model: {carInfo?.model || ""}</p>
+                                </Col>
+                                <Col md={6} className="mb-3">
+                                    <p>Car price: {carInfo?.pricePerDay + ' zł / day' || ""}</p>
+                                    <p>Photo: {carInfo?.photos || ""}</p>
+                                </Col>
+                            </Row>
+                            <Form>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Date from</Form.Label>
+                                        <Form.Group className="mb-3">
+                                            <Datetime
+                                                timeFormat={false}
+                                                closeOnSelect={false}
+                                                renderInput={(props, openCalendar) => (
+                                                    <InputGroup>
+                                                        <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
+                                                        <Form.Control
+                                                            required
+                                                            type="text"
+                                                            value={""}
+                                                            placeholder="mm/dd/yyyy"
+                                                            onFocus={openCalendar}
+                                                            onChange={() => { }} />
+                                                    </InputGroup>
+                                                )} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Date to</Form.Label>
+                                        <Form.Group className="mb-3">
+                                            <Datetime
+                                                timeFormat={false}
+                                                closeOnSelect={false}
+                                                renderInput={(props, openCalendar) => (
+                                                    <InputGroup>
+                                                        <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
+                                                        <Form.Control
+                                                            required
+                                                            type="text"
+                                                            value={""}
+                                                            placeholder="mm/dd/yyyy"
+                                                            onFocus={openCalendar}
+                                                            onChange={() => { }} />
+                                                    </InputGroup>
+                                                )} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Customer</Form.Label>
+                                        <Form.Group className="mb-3">
+                                            PICKER
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Final price</Form.Label>
+                                        <p>100$</p>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="warning" type="submit">
+                                        Rent
+                                    </Button>
+                                </Row>
+                            </Form>
+                        </Card.Body>
+                    </Card >
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
             {/*Adding a new car - modal*/}
 
             <Modal
@@ -424,17 +541,17 @@ export default () => {
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                        <p style={{ textTransform: 'capitalize' }}>Class: {carInfo?.carClass || ""}</p>
-                        <p>Brand: {carInfo?.brand || ""}</p>
-                        <p>Model: {carInfo?.model || ""}</p>
-                        <p>Seating capacity: {carInfo?.seatingCapacity + ' persons' || ""}</p>
-                        <p>Engine capacity: {carInfo?.engineCapacity + ' l' || ""}</p>
-                        <p style={{ textTransform: 'capitalize' }}>Engine type: {carInfo?.engineType || ""}</p>
-                        <p>Mileage: {carInfo?.mileage + ' km' || ""}</p>
-                        <p>Car price: {carInfo?.pricePerDay + ' zł / day'|| ""}</p>
-                        <p style={{ textTransform: 'capitalize' }}> Status: {carInfo?.status || ""}</p>
-                        <p>Notes: {carInfo?.notes || ""}</p>
-                        <p>Photos: {carInfo?.photos || ""}</p>
+                    <p style={{ textTransform: 'capitalize' }}>Class: {carInfo?.carClass || ""}</p>
+                    <p>Brand: {carInfo?.brand || ""}</p>
+                    <p>Model: {carInfo?.model || ""}</p>
+                    <p>Seating capacity: {carInfo?.seatingCapacity + ' persons' || ""}</p>
+                    <p>Engine capacity: {carInfo?.engineCapacity + ' l' || ""}</p>
+                    <p style={{ textTransform: 'capitalize' }}>Engine type: {carInfo?.engineType || ""}</p>
+                    <p>Mileage: {carInfo?.mileage + ' km' || ""}</p>
+                    <p>Car price: {carInfo?.pricePerDay + ' zł / day' || ""}</p>
+                    <p style={{ textTransform: 'capitalize' }}> Status: {carInfo?.status || ""}</p>
+                    <p>Notes: {carInfo?.notes || ""}</p>
+                    <p>Photos: {carInfo?.photos || ""}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
@@ -465,19 +582,19 @@ export default () => {
                                     <Col md={4} className="mb-3">
                                         <Form.Group id="brand">
                                             <Form.Label>Brand</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter car's brand" />
+                                            <Form.Control required type="text" placeholder={carInfo?.brand || "Enter car's brand"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={4} className="mb-3">
                                         <Form.Group id="model">
                                             <Form.Label>Model</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter car's model" />
+                                            <Form.Control required type="text" placeholder={carInfo?.model || "Enter car's model"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={4} className="mb-3">
                                         <Form.Group id="seatingCapacity">
                                             <Form.Label>Seating Capacity</Form.Label>
-                                            <Form.Control required type="number" placeholder="No. of seats" />
+                                            <Form.Control required type="number" placeholder={carInfo?.seatingCapacity || "No. of seats"} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -485,19 +602,19 @@ export default () => {
                                     <Col md={4} className="mb-3">
                                         <Form.Group id="engineCapacity">
                                             <Form.Label>Engine Capacity</Form.Label>
-                                            <Form.Control required type="float" placeholder="e.g. 1.9 l" />
+                                            <Form.Control required type="float" placeholder={carInfo?.engineCapacity || "e.g. 1.9 l"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={4} className="mb-3">
                                         <Form.Group id="mileage">
                                             <Form.Label>Mileage</Form.Label>
-                                            <Form.Control required type="number" placeholder="e.g. 250000 km" />
+                                            <Form.Control required type="number" placeholder={carInfo?.mileage || "e.g. 250000 km"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={4} className="mb-3">
                                         <Form.Group className="mb-2">
                                             <Form.Label>Select car's engine type</Form.Label>
-                                            <Form.Select id="engineType" defaultValue="petrol">
+                                            <Form.Select id="engineType" defaultValue={carInfo?.engineType || "petrol"}>
                                                 <option value="petrol">Petrol</option>
                                                 <option value="diesel">Diesel</option>
                                                 <option value="hybrid">Hybrid</option>
@@ -510,7 +627,7 @@ export default () => {
                                     <Col md={4} className="mb-3">
                                         <Form.Group className="mb-2">
                                             <Form.Label>Select car's class</Form.Label>
-                                            <Form.Select id="carClass" defaultValue="economic">
+                                            <Form.Select id="carClass" defaultValue={carInfo?.carClass || "economic"}>
                                                 <option value="economic">Economic</option>
                                                 <option value="premium">Premium</option>
                                                 <option value="family">Family</option>
@@ -520,13 +637,13 @@ export default () => {
                                     <Col md={4} className="mb-3">
                                         <Form.Group id="price">
                                             <Form.Label>Price per day</Form.Label>
-                                            <Form.Control required type="number" placeholder="e.g. 120 zł" />
+                                            <Form.Control required type="number" placeholder={carInfo?.pricePerDay || "e.g. 120 zł"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={4} className="mb-3">
                                         <Form.Group className="mb-2">
                                             <Form.Label>Select car's status</Form.Label>
-                                            <Form.Select id="carClass" defaultValue="economic">
+                                            <Form.Select id="carClass" defaultValue={carInfo?.status || "available"}>
                                                 <option value="available">Available</option>
                                                 <option value="rented">Rented</option>
                                                 <option value="renovation">Renovation</option>
@@ -550,7 +667,7 @@ export default () => {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Button variant="secondary" type="submit" onClick={(uuid) => { handleEdit(); setUuid(uuid) }}>
+                                    <Button variant="secondary" type="submit">
                                         Edit
                                     </Button>
                                 </Row>
@@ -580,7 +697,7 @@ export default () => {
                     <span>New</span>
                 </Button>
             </div>
-            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCar(uuid) }} />
+            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openRent={(uuid) => { setShowRent(true); setUuid(uuid); getCar(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid); getCar(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCar(uuid) }} ref={refTable} />
         </>
     )
 }

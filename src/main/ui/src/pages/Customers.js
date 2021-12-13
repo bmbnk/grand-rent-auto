@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { useState, useRef, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHome, faPlus, faEye, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, Breadcrumb, Dropdown, Modal, Card, } from '@themesberg/react-bootstrap';
@@ -83,6 +83,10 @@ export class CustomersTableBoot extends Component {
     }
 
     componentDidMount() {
+        this.updateTable()
+    }
+
+    updateTable() {
         axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers')
             .then(response => {
                 this.setState({
@@ -109,6 +113,7 @@ export default () => {
     const [showEdit, setShowEdit] = useState(false);
     const [uuid, setUuid] = useState(null);
     const [customerInfo, setCustomerInfo] = useState(null);
+    const refTable = useRef(null);
     const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false);
 
     const handleAdd = (event) => {
@@ -124,9 +129,9 @@ export default () => {
             }),
             headers: { 'Content-Type': 'application/json' },
         })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
-        window.location.reload(false);
     }
 
     const handleEdit = (event) => {
@@ -139,18 +144,19 @@ export default () => {
                 lastName: event.target[1].value,
                 eMail: event.target[2].value,
                 phoneNumber: event.target[3].value
-        }),
+            }),
             headers: { 'Content-Type': 'application/json' },
         })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
 
-        // handleClose();
-        // window.location.reload(false);
+        handleClose();
     }
 
     function deleteCustomer(uuid) {
         axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid)
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
+
         handleClose();
-        window.location.reload(false);
     }
 
     function getCustomer(uuid) {
@@ -252,11 +258,11 @@ export default () => {
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
-                        <p>ID: {customerInfo?.customerId || ""}</p>
-                        <p>First name: {customerInfo?.firstName || ""}</p>
-                        <p>Last name: {customerInfo?.lastName || ""}</p>
-                        <p>E-mail: {customerInfo?.eMail || ""}</p>
-                        <p>Phone number: {customerInfo?.phoneNumber || ""}</p>
+                    <p>ID: {customerInfo?.customerId || ""}</p>
+                    <p>First name: {customerInfo?.firstName || ""}</p>
+                    <p>Last name: {customerInfo?.lastName || ""}</p>
+                    <p>E-mail: {customerInfo?.eMail || ""}</p>
+                    <p>Phone number: {customerInfo?.phoneNumber || ""}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
@@ -275,104 +281,44 @@ export default () => {
                 onSubmit={handleEdit}
             >
                 <Modal.Header>
-                    <Modal.Title className="h6">Edit this car</Modal.Title>
+                    <Modal.Title className="h6">Edit this customer</Modal.Title>
                     <Button variant="close" aria-label="Close" onClick={handleClose} />
                 </Modal.Header>
                 <Modal.Body>
                     <Card border="light" className="bg-white shadow-sm mb-4">
                         <Card.Body>
-                            <h5 className="mb-4">General information</h5>
+                            <h5 className="mb-4">Personal data of {uuid}</h5>
                             <Form>
                                 <Row>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="brand">
-                                            <Form.Label>Brand</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter car's brand" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="model">
-                                            <Form.Label>Model</Form.Label>
-                                            <Form.Control required type="text" placeholder="Enter car's model" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="seatingCapacity">
-                                            <Form.Label>Seating Capacity</Form.Label>
-                                            <Form.Control required type="number" placeholder="No. of seats" />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="engineCapacity">
-                                            <Form.Label>Engine Capacity</Form.Label>
-                                            <Form.Control required type="float" placeholder="e.g. 1.9 l" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="mileage">
-                                            <Form.Label>Mileage</Form.Label>
-                                            <Form.Control required type="number" placeholder="e.g. 250000 km" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Select car's engine type</Form.Label>
-                                            <Form.Select id="engineType" defaultValue="petrol">
-                                                <option value="petrol">Petrol</option>
-                                                <option value="diesel">Diesel</option>
-                                                <option value="hybrid">Hybrid</option>
-                                                <option value="electric">Electric</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Select car's class</Form.Label>
-                                            <Form.Select id="carClass" defaultValue="economic">
-                                                <option value="economic">Economic</option>
-                                                <option value="premium">Premium</option>
-                                                <option value="family">Family</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group id="price">
-                                            <Form.Label>Price per day</Form.Label>
-                                            <Form.Control required type="number" placeholder="e.g. 120 zł" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Select car's status</Form.Label>
-                                            <Form.Select id="carClass" defaultValue="economic">
-                                                <option value="available">Available</option>
-                                                <option value="rented">Rented</option>
-                                                <option value="renovation">Renovation</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <h5 className="mb-4">Additional information (optional)</h5>
-                                <Row>
                                     <Col md={6} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Notes</Form.Label>
-                                            <Form.Control type="text" placeholder="Enter notes here" />
+                                        <Form.Group id="firstName">
+                                            <Form.Label>First name</Form.Label>
+                                            <Form.Control required type="text" placeholder={customerInfo?.firstName || "Enter first name"} />
                                         </Form.Group>
                                     </Col>
                                     <Col md={6} className="mb-3">
-                                        <Form.Group className="mb-2">
-                                            <Form.Label>Add photos</Form.Label>
-                                            <Form.Control type="file" />
+                                        <Form.Group id="lastName">
+                                            <Form.Label>Last name</Form.Label>
+                                            <Form.Control required type="text" placeholder={customerInfo?.lastName || "Enter last name"} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Button variant="secondary" type="submit" onClick={(uuid) => { handleEdit(); setUuid(uuid) }}>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="eMail">
+                                            <Form.Label>E-mail</Form.Label>
+                                            <Form.Control required type="text" placeholder={customerInfo?.eMail || "Enter e-mail"} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group id="phoneNumber">
+                                            <Form.Label>Phone number</Form.Label>
+                                            <Form.Control required type="text" placeholder={customerInfo?.phoneNumber || "e.g. 123456789"} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="secondary" type="submit">
                                         Edit
                                     </Button>
                                 </Row>
@@ -402,7 +348,7 @@ export default () => {
                     <span>New</span>
                 </Button>
             </div>
-            <CustomersTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCustomer(uuid) }} />
+            <CustomersTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid); getCustomer(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCustomer(uuid) }} ref={refTable} />
         </>
     )
 }
