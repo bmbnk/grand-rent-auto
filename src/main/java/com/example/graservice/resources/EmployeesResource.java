@@ -2,6 +2,7 @@ package com.example.graservice.resources;
 
 import com.example.graservice.dtos.EmployeeDTO;
 import com.example.graservice.services.EmpolyeesService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonObject;
@@ -9,8 +10,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/employees")
 @RequestScoped
+@Path("/employees")
 public class EmployeesResource {
 
     @Inject
@@ -40,6 +41,7 @@ public class EmployeesResource {
                 .build();
     }
 
+    @RolesAllowed("ADMIN")
     @DELETE
     @Path("/{id}")
     public Response removeEmployeeById(@PathParam("id") int id) {
@@ -54,6 +56,7 @@ public class EmployeesResource {
                 .build();
     }
 
+    @RolesAllowed("ADMIN")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,6 +73,7 @@ public class EmployeesResource {
                 .build();
     }
 
+    @RolesAllowed("ADMIN")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
