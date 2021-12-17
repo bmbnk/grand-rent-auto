@@ -1,16 +1,16 @@
 package com.example.graservice.resources;
 
-import com.example.graservice.dtos.CustomerDTO;
+import com.example.graservice.entities.CustomersEntity;
 import com.example.graservice.services.CustomersService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.json.JsonObject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/customers")
+
 @RequestScoped
+@Path("/customers")
 public class CustomersResource {
 
     @Inject
@@ -28,7 +28,7 @@ public class CustomersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public Response getCustomerById(@PathParam("id") int id) {
-        CustomerDTO customer = customersService.getCustomerById(id);
+        CustomersEntity customer = customersService.getCustomerById(id);
         if(customer != null) {
             return Response
                     .ok(customer)
@@ -57,16 +57,10 @@ public class CustomersResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCustomer(JsonObject customer) {
-        String errorMessage = customersService.validatePostRequest(customer);
-        if (errorMessage.isEmpty())
-            return Response
-                    .status(Response.Status.CREATED)
-                    .entity(customersService.addCustomer(customer))
-                    .build();
+    public Response addCustomer(CustomersEntity customer) {
         return Response
-                .status(Response.Status.FORBIDDEN)
-                .entity(errorMessage)
+                .status(201)
+                .entity(customersService.addCustomer(customer))
                 .build();
     }
 
@@ -74,11 +68,11 @@ public class CustomersResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response editCustomer(@PathParam("id") int id, CustomerDTO editedCustomer) {
-        CustomerDTO customer = customersService.editCustomer(id, editedCustomer);
+    public Response editCustomer(@PathParam("id") int id, CustomersEntity editedCustomer) {
+        CustomersEntity customer = customersService.getCustomerById(id);
         if(customer != null) {
             return Response
-                    .ok(customer)
+                    .ok(customersService.editCustomer(customer, editedCustomer))
                     .build();
         }
         return Response
