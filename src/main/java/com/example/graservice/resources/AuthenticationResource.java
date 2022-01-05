@@ -36,4 +36,20 @@ public class AuthenticationResource {
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
+
+    // TODO: Delete this after it is tested
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/test")
+    public Response authenticateTest(JsonObject credentials) {
+        EmployeesEntity user = authenticationService.validateCredentials(credentials.getString("email"), credentials.getString("password"));
+        if (user != null) {
+            String userName = user.getFirstName().concat(" ".concat(user.getLastName()));
+            String token = authenticationService.createToken(user.getId(), userName, user.isAdmin());
+            return Response.ok(token).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
 }
