@@ -8,10 +8,16 @@ import Cars from "./Cars";
 import Rentals from "./Rentals";
 import Employees from "./Employees";
 import Customers from "./Customers";
+import Settings from "./Settings";
+import Login from "./Login";
+
+//hooks
+import useJwt from "./useJwt";
+
+// sample
 import Upgrade from "./Upgrade";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Transactions from "./Transactions";
-import Settings from "./Settings";
 import BootstrapTables from "./tables/BootstrapTables";
 import Signin from "./examples/Signin";
 import Signup from "./examples/Signup";
@@ -32,7 +38,6 @@ import DocsChangelog from "./documentation/DocsChangelog";
 
 // components
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Preloader from "../components/Preloader";
 
@@ -55,11 +60,16 @@ import Toasts from "./components/Toasts";
 
 const RouteWithLoader = ({component: Component, ...rest}) => {
     const [loaded, setLoaded] = useState(false);
+    const { jwt, setJwt } = useJwt();
 
     useEffect(() => {
         const timer = setTimeout(() => setLoaded(true), 1000);
         return () => clearTimeout(timer);
     }, []);
+
+    if(!jwt) {
+        return <Login setJwt={setJwt} />
+    }
 
     return (
         <Route {...rest} render={props => (<> <Preloader show={loaded ? false : true}/> <Component {...props} /> </>)}/>
@@ -68,6 +78,7 @@ const RouteWithLoader = ({component: Component, ...rest}) => {
 
 const RouteWithSidebar = ({component: Component, ...rest}) => {
     const [loaded, setLoaded] = useState(false);
+    const { jwt, setJwt } = useJwt();
 
     useEffect(() => {
         const timer = setTimeout(() => setLoaded(true), 1000);
@@ -85,6 +96,10 @@ const RouteWithSidebar = ({component: Component, ...rest}) => {
         localStorage.setItem('settingsVisible', !showSettings);
     }
 
+    if(!jwt) {
+        return <Login setJwt={setJwt} />
+    }
+
     return (
         <Route {...rest} render={props => (
             <>
@@ -92,7 +107,6 @@ const RouteWithSidebar = ({component: Component, ...rest}) => {
                 <Sidebar/>
 
                 <main className="content">
-                    <Navbar/>
                     <Component {...props} />
                     <Footer toggleSettings={toggleSettings} showSettings={showSettings}/>
                 </main>
@@ -112,6 +126,7 @@ export default () => (
         <RouteWithLoader exact path={Routes.Lock.path} component={Lock}/>
         <RouteWithLoader exact path={Routes.NotFound.path} component={NotFoundPage}/>
         <RouteWithLoader exact path={Routes.ServerError.path} component={ServerError}/>
+        <RouteWithLoader exact path={Routes.Login.path} component={Login}/>
 
         {/* pages */}
         <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview}/>
