@@ -8,6 +8,9 @@ export const Routes = {
     Employees: {path: "/employees"},
     Customers: {path: "/customers"},
     Settings: {path: "/settings"},
+    Login: {path: "/login"},
+
+    // sample
     Upgrade: {path: "/upgrade"},
     BootstrapTables: {path: "/tables/bootstrap-tables"},
     Billing: {path: "/examples/billing"},

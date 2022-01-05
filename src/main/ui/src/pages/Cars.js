@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faCheck, faEllipsisH, faCog, faHome, faSearch, faPlus, faEye, faEdit, faTrashAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, DropdownButton, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
 import Datetime from "react-datetime";
-import moment from "moment-timezone";
-
 
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 
@@ -14,6 +12,19 @@ import BootstrapTable from "react-bootstrap-table-next";
 
 const { SearchBar } = Search;
 const Url = "http://localhost:8080/gra-service-1.0-SNAPSHOT/api/";
+
+function prepareToken() {
+    const str = localStorage.getItem('jwt')
+    return str?.slice(8,175)
+}
+
+const token = prepareToken().replace(/\"/g, "");
+
+let config = {
+    headers: {
+        'Authorization': `Bearer ${token}`
+    }
+}
 
 export class CarsTableBoot extends Component {
     state = {
@@ -165,7 +176,8 @@ export class CarsTableBoot extends Component {
     }
 
     updateTable() {
-        axios.get(Url + 'cars')
+        console.log(config)
+        axios.get(Url + 'cars', '', config)
             .then(response => {
                 this.setState({
                     cars: response.data
