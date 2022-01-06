@@ -142,3 +142,10 @@ dist
 hs_err_pid*
 
 */target/gra-service-1.0-SNAPSHOT/META-INF/MANIFEST.MF
+target/maven-archiver/pom.properties
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+target/gra-service-1.0-SNAPSHOT/META-INF/MANIFEST.MF
+target/gra-service-1.0-SNAPSHOT/META-INF/MANIFEST.MF
+target/gra-service-1.0-SNAPSHOT/META-INF/MANIFEST.MF
+target/gra-service-1.0-SNAPSHOT/META-INF/MANIFEST.MF

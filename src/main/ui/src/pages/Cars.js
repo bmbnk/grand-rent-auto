@@ -1,7 +1,7 @@
 import React, { useState, useRef, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faCheck, faEllipsisH, faCog, faHome, faSearch, faPlus, faEye, faEdit, faTrashAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown, DropdownButton, Modal, Pagination, Card, Nav } from '@themesberg/react-bootstrap';
+import { faCar, faEllipsisH, faHome, faPlus, faEye, faEdit, faTrashAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row, Form, Button, Breadcrumb, InputGroup, Dropdown, Modal, Card } from '@themesberg/react-bootstrap';
 import Datetime from "react-datetime";
 
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
@@ -14,16 +14,7 @@ const { SearchBar } = Search;
 const Url = "http://localhost:8080/gra-service-1.0-SNAPSHOT/api/";
 
 function prepareToken() {
-    const str = localStorage.getItem('jwt')
-    return str?.slice(8,175)
-}
-
-const token = prepareToken().replace(/\"/g, "");
-
-let config = {
-    headers: {
-        'Authorization': `Bearer ${token}`
-    }
+    return JSON.parse(localStorage.getItem('jwt'))?.jwt
 }
 
 export class CarsTableBoot extends Component {
@@ -176,8 +167,7 @@ export class CarsTableBoot extends Component {
     }
 
     updateTable() {
-        console.log(config)
-        axios.get(Url + 'cars', '', config)
+        axios.get(Url + 'cars', { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(response => {
                 this.setState({
                     cars: response.data
@@ -244,7 +234,8 @@ export default () => {
                 seatingCapacity: event.target[2].value,
                 status: 'available'
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json'
+            ,"Authorization" : `Bearer ${prepareToken()}`}
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -267,7 +258,8 @@ export default () => {
                 seatingCapacity: event.target[2].value,
                 status: event.target[8].value
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' 
+            ,"Authorization" : `Bearer ${prepareToken()}`}
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -290,7 +282,8 @@ export default () => {
                 seatingCapacity: event.target[2].value,
                 status: event.target[8].value
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' 
+            ,"Authorization" : `Bearer ${prepareToken()}`}
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -298,14 +291,14 @@ export default () => {
     }
 
     function deleteCar(uuid, url) {
-        axios.delete(url + 'cars/' + uuid)
+        axios.delete(url + 'cars/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
     }
 
     function getCar(uuid) {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars/' + uuid)
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then((response) => {
                 setCarInfo(response.data);
             })

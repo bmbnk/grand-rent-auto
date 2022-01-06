@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SimpleBar from 'simplebar-react';
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -9,10 +9,8 @@ import {
     faUser,
     faUsers,
     faFile,
-    faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
-import { Nav, Badge, Image, Button, Accordion, Navbar } from '@themesberg/react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Nav, Badge, Image, Button, Navbar, Accordion } from '@themesberg/react-bootstrap';
 
 import { Routes } from "../routes";
 import ReactHero from "../assets/img/technologies/react-hero-logo.svg";
@@ -51,7 +49,7 @@ export default (props = {}) => {
                 </Accordion.Item>
             </Accordion>
         );
-    };
+    }
 
     const NavItem = (props) => {
         const {

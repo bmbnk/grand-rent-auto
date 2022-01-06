@@ -1,11 +1,15 @@
 import React, { useState, useRef, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisH, faHome, faKey, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH, faHome, faKey, faEye } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Form, Button, Breadcrumb, Dropdown, Modal, Card, } from '@themesberg/react-bootstrap';
 
 import axios from 'axios';
 
 import BootstrapTable from "react-bootstrap-table-next";
+
+function prepareToken() {
+    return JSON.parse(localStorage.getItem('jwt'))?.jwt
+}
 
 export class RentalsTableBoot extends Component {
     state = {
@@ -117,7 +121,7 @@ export class RentalsTableBoot extends Component {
     }
 
     updateTable() {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers')
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers', { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(response => {
                 this.setState({
                     rentals: response.data
@@ -155,14 +159,15 @@ export default () => {
                 eMail: event.target[2].value,
                 phoneNumber: event.target[3].value
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 
+            "Authorization" : `Bearer ${prepareToken()}`},
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
         handleClose();
     }
 
     function getRental(uuid) {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid)
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then((response) => {
                 setRentalInfo(response.data);
             })

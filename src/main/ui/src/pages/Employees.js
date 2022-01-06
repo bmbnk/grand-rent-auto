@@ -7,6 +7,10 @@ import axios from 'axios';
 
 import BootstrapTable from "react-bootstrap-table-next";
 
+function prepareToken() {
+    return JSON.parse(localStorage.getItem('jwt'))?.jwt
+}
+
 export class EmployeesTableBoot extends Component {
     state = {
         employees: [],
@@ -51,7 +55,7 @@ export class EmployeesTableBoot extends Component {
             dataField: 'isAdmin',
             text: 'Is Admin?',
             formatter: (cellContent, row) => {
-                if (row.isAdmin == true) {
+                if (row.isAdmin) {
                     return <p style={{ color: 'green' }}>Yes</p>
                 } else {
                     return <p style={{ color: 'red' }}>No</p>
@@ -97,7 +101,7 @@ export class EmployeesTableBoot extends Component {
     }
 
     updateTable() {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees')
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees', { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(response => {
                 this.setState({
                     employees: response.data
@@ -114,7 +118,7 @@ export class EmployeesTableBoot extends Component {
             </Card>
         )
     }
-};
+}
 
 export default () => {
     const [showDefault, setShowDefault] = useState(false);
@@ -131,10 +135,7 @@ export default () => {
 
         var isTrue = false
         
-        if (event.target[5].value === "false")
-        {
-            isTrue = false
-        } else if (event.target[5].value === "true") {
+        if (event.target[5].value === "true") {
             isTrue = true
         }
 
@@ -148,7 +149,8 @@ export default () => {
                 phoneNumber: new Number(event.target[4].value),
                 isAdmin: new Boolean(isTrue)
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 
+            "Authorization" : `Bearer ${prepareToken()}`},
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -176,7 +178,8 @@ export default () => {
                 phoneNumber: new Number(event.target[3].value),
                 isAdmin: new Boolean(isTrue)
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 
+            "Authorization" : `Bearer ${prepareToken()}`},
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -184,14 +187,14 @@ export default () => {
     }
 
     function deleteEmployee(uuid) {
-        axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid)
+        axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
     }
 
     function getEmployee(uuid) {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid)
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/employees/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then((response) => {
                 setEmployeeInfo(response.data);
             })

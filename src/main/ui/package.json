@@ -53,11 +53,12 @@
     "react-router-dom": "^5.2.0",
     "react-router-hash-link": "^2.3.1",
     "react-scripts": "^4.0.3",
+    "react-toastify": "^8.1.0",
     "react-transition-group": "^4.4.1",
     "simplebar-react": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "build-local": "PUBLIC_URL=./ react-scripts build",
     "test": "react-scripts test",

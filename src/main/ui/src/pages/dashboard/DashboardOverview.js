@@ -1,6 +1,6 @@
 import React from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Col, Row, Card, Container, Breadcrumb} from '@themesberg/react-bootstrap';
+import {Col, Row, Card, Breadcrumb} from '@themesberg/react-bootstrap';
 import {faHome} from '@fortawesome/free-solid-svg-icons';
 
 export default () => {

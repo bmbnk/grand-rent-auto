@@ -7,6 +7,10 @@ import axios from 'axios';
 
 import BootstrapTable from "react-bootstrap-table-next";
 
+function prepareToken() {
+    return JSON.parse(localStorage.getItem('jwt'))?.jwt
+}
+
 export class CustomersTableBoot extends Component {
     state = {
         customers: [],
@@ -87,7 +91,7 @@ export class CustomersTableBoot extends Component {
     }
 
     updateTable() {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers')
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers', { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(response => {
                 this.setState({
                     customers: response.data
@@ -104,7 +108,7 @@ export class CustomersTableBoot extends Component {
             </Card>
         )
     }
-};
+}
 
 export default () => {
     const [showDefault, setShowDefault] = useState(false);
@@ -127,7 +131,8 @@ export default () => {
                 eMail: event.target[2].value,
                 phoneNumber: event.target[3].value
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 
+            "Authorization" : `Bearer ${prepareToken()}`},
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -145,7 +150,8 @@ export default () => {
                 eMail: event.target[2].value,
                 phoneNumber: event.target[3].value
             }),
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 
+            "Authorization" : `Bearer ${prepareToken()}`},
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -153,14 +159,14 @@ export default () => {
     }
 
     function deleteCustomer(uuid) {
-        axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid)
+        axios.delete('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
     }
 
     function getCustomer(uuid) {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid)
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
             .then((response) => {
                 setCustomerInfo(response.data);
             })

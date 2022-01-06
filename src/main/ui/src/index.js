@@ -15,7 +15,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter} from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 // core styles
 import "./scss/volt.scss";
@@ -28,12 +28,10 @@ import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css
 
 
 import HomePage from "./pages/HomePage";
-import ScrollToTop from "./components/ScrollToTop";
 
 ReactDOM.render(
     <HashRouter>
-        <ScrollToTop/>
-        <HomePage/>
+        <HomePage />
     </HashRouter>,
     document.getElementById("root")
 );

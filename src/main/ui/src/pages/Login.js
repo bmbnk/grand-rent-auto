@@ -3,29 +3,36 @@ import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Form, Button, Container, InputGroup } from '@themesberg/react-bootstrap';
+import { Col, Row, Form, Button, Container, InputGroup, Toast } from '@themesberg/react-bootstrap';
+
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import BgImage from "../assets/img/illustrations/signin.svg";
 
-async function loginUser(credentials) {
-    return fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/auth', {
-        method: 'POST', 
-        headers: {
-            'Content-Type': 'application/json'
-        }, 
-        body: JSON.stringify(credentials)
-    })
-    .then(data => data.json())
+function notify() {
+    toast.warning("Something is wrong, try again!");
 }
 
-export default function Login( { setJwt } ) {
+async function loginUser(credentials) {
+    return fetch('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/auth', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    })
+        .then(data => data.json())
+}
+
+export default function Login({ setJwt }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
     const handleSubmit = async e => {
         e.preventDefault();
         const jwt = await loginUser({
-            email, 
+            email,
             password
         });
         setJwt(jwt);
@@ -62,7 +69,7 @@ export default function Login( { setJwt } ) {
                                             </InputGroup>
                                         </Form.Group>
                                     </Form.Group>
-                                    <Button variant="primary" type="submit" className="w-100">
+                                    <Button variant="primary" type="submit" className="w-100" onClick={() => notify()}>
                                         Sign in
                                     </Button>
                                 </Form>
@@ -70,10 +77,11 @@ export default function Login( { setJwt } ) {
                         </Col>
                     </Row>
                 </Container>
+                <ToastContainer />
             </section>
         </main>
     );
-};
+}
 
 Login.propTypes = {
     setJwt: PropTypes.func.isRequired
