@@ -146,8 +146,8 @@ export default () => {
                 lastName: event.target[1].value,
                 eMail: event.target[3].value,
                 password: event.target[2].value,
-                phoneNumber: new Number(event.target[4].value),
-                isAdmin: new Boolean(isTrue)
+                phoneNumber: Number(event.target[4].value),
+                isAdmin: Boolean(isTrue)
             }),
             headers: { 'Content-Type': 'application/json', 
             "Authorization" : `Bearer ${prepareToken()}`},

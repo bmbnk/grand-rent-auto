@@ -5,10 +5,8 @@ import {Routes} from "../routes";
 // pages
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Cars from "./Cars";
-import Rentals from "./Rentals";
 import Employees from "./Employees";
 import Customers from "./Customers";
-import Settings from "./Settings";
 import Login from "./Login";
 import NotFoundPage from "./NotFound";
 
@@ -86,10 +84,8 @@ export default () => (
         {/* pages */}
         <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview}/>
         <RouteWithSidebar exact path={Routes.Cars.path} component={Cars}/>
-        <RouteWithSidebar exact path={Routes.Rentals.path} component={Rentals}/>
         <RouteWithSidebar exact path={Routes.Customers.path} component={Customers}/>
         <RouteWithSidebar exact path={Routes.Employees.path} component={Employees}/>
-        <RouteWithSidebar exact path={Routes.Settings.path} component={Settings}/>
 
         <Redirect to={Routes.NotFound.path}/>
     </Switch>

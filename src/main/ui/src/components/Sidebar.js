@@ -101,10 +101,8 @@ export default (props = {}) => {
                         <Nav className="flex-column pt-3 pt-md-0">
                             <NavItem title="Grand Rent Auto" link={Routes.DashboardOverview.path} image={ReactHero} />
                             <NavItem title="Cars" icon={faCar} link={Routes.Cars.path} />
-                            <NavItem title="Rentals" icon={faFile} link={Routes.Rentals.path} />
                             <NavItem title="Customers" icon={faUser} link={Routes.Customers.path} />
                             <NavItem title="Employees" icon={faUsers} link={Routes.Employees.path} />
-                            <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
 
                         </Nav>
                         <Nav className="upgrade-to-pro flex-column pt-3 pt-md-0">

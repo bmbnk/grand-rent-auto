@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BgImage from "../assets/img/illustrations/signin.svg";
 
 function notify() {
-    toast.warning("Something is wrong, try again!");
+    toast.warning("Something went wrong, try again later!");
 }
 
 async function loginUser(credentials) {

@@ -1,8 +1,7 @@
 import React, { useState, useRef, Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faEllipsisH, faHome, faPlus, faEye, faEdit, faTrashAlt, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Form, Button, Breadcrumb, InputGroup, Dropdown, Modal, Card } from '@themesberg/react-bootstrap';
-import Datetime from "react-datetime";
+import { faCar, faEllipsisH, faHome, faPlus, faEye, faEdit, faTrashAlt, faKey } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row, Form, Button, Breadcrumb, Dropdown, Modal, Card } from '@themesberg/react-bootstrap';
 
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 
@@ -128,36 +127,89 @@ export class CarsTableBoot extends Component {
             dataField: 'actions',
             text: 'Actions',
             isDummyField: true,
-            formatExtraData: { setShowDelete: this.props.openDelete, setShowRent: this.props.openRent, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit },
+            formatExtraData: { setShowDelete: this.props.openDelete, setShowRent: this.props.openRent, setShowDetails: this.props.openDetails, setShowEdit: this.props.openEdit, setShowReturn: this.props.openReturn },
             formatter: (cellContent, row, rowIndex, extraDataJson) => {
                 const carUuid = row.carId;
 
-                return (
-                    <React.Fragment>
-                        <Dropdown>
-                            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
-                                <span className="icon icon-sm">
-                                    <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                                </span>
-                            </Dropdown.Toggle>
+                if (row.status === 'available') {
+                    return (
+                        <React.Fragment>
+                            <Dropdown>
+                                <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+                                    <span className="icon icon-sm">
+                                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                                    </span>
+                                </Dropdown.Toggle>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowRent(carUuid)}>
-                                    <FontAwesomeIcon icon={faCar} className="me-2" /> Rent car
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowDetails(carUuid)}>
-                                    <FontAwesomeIcon icon={faEye} className="me-2" /> View car
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowEdit(carUuid)}>
-                                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit car
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)} className="text-danger">
-                                    <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </React.Fragment>
-                )
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowRent(carUuid)}>
+                                        <FontAwesomeIcon icon={faCar} className="me-2" /> Rent car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowDetails(carUuid)}>
+                                        <FontAwesomeIcon icon={faEye} className="me-2" /> View car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowEdit(carUuid)}>
+                                        <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)} className="text-danger">
+                                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </React.Fragment>
+                    )
+                } else if (row.status === 'rented') {
+                    return (
+                        <React.Fragment>
+                            <Dropdown>
+                                <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+                                    <span className="icon icon-sm">
+                                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                                    </span>
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowReturn(carUuid)}>
+                                        <FontAwesomeIcon icon={faKey} className="me-2" /> Finish rental
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowDetails(carUuid)}>
+                                        <FontAwesomeIcon icon={faEye} className="me-2" /> View car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowEdit(carUuid)}>
+                                        <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)} className="text-danger">
+                                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </React.Fragment>
+                    )
+                } else {
+                    return (
+                        <React.Fragment>
+                            <Dropdown>
+                                <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+                                    <span className="icon icon-sm">
+                                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                                    </span>
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowDetails(carUuid)}>
+                                        <FontAwesomeIcon icon={faEye} className="me-2" /> View car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowEdit(carUuid)}>
+                                        <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit car
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => extraDataJson.setShowDelete(carUuid)} className="text-danger">
+                                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </React.Fragment>
+                    )
+                }
             }
         }]
     }
@@ -167,7 +219,7 @@ export class CarsTableBoot extends Component {
     }
 
     updateTable() {
-        axios.get(Url + 'cars', { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
+        axios.get(Url + 'cars', { headers: { "Authorization": `Bearer ${prepareToken()}` } })
             .then(response => {
                 this.setState({
                     cars: response.data
@@ -212,11 +264,12 @@ export default () => {
     const [showDelete, setShowDelete] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const [showRent, setShowRent] = useState(false);
+    const [showReturn, setShowReturn] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [uuid, setUuid] = useState(null);
     const [carInfo, setCarInfo] = useState(null);
     const refTable = useRef(null);
-    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false) & setShowRent(false);
+    const handleClose = () => setShowDefault(false) & setShowDelete(false) & setShowDetails(false) & setShowEdit(false) & setShowRent(false) & setShowReturn(false);
 
     const handleAdd = (event) => {
         event.preventDefault()
@@ -234,8 +287,10 @@ export default () => {
                 seatingCapacity: event.target[2].value,
                 status: 'available'
             }),
-            headers: { 'Content-Type': 'application/json'
-            ,"Authorization" : `Bearer ${prepareToken()}`}
+            headers: {
+                'Content-Type': 'application/json'
+                , "Authorization": `Bearer ${prepareToken()}`
+            }
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -258,8 +313,10 @@ export default () => {
                 seatingCapacity: event.target[2].value,
                 status: event.target[8].value
             }),
-            headers: { 'Content-Type': 'application/json' 
-            ,"Authorization" : `Bearer ${prepareToken()}`}
+            headers: {
+                'Content-Type': 'application/json'
+                , "Authorization": `Bearer ${prepareToken()}`
+            }
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -269,21 +326,39 @@ export default () => {
     const handleRent = (event) => {
         event.preventDefault()
 
-        fetch(Url + 'cars/' + uuid, {
-            method: 'PUT',
+        fetch(Url + 'rentals', {
+            method: 'POST',
             body: JSON.stringify({
-                brand: event.target[0].value,
-                carClass: event.target[6].value,
-                engineCapacity: event.target[3].value,
-                engineType: event.target[5].value,
-                mileage: event.target[4].value,
-                model: event.target[1].value,
-                pricePerDay: event.target[7].value,
-                seatingCapacity: event.target[2].value,
-                status: event.target[8].value
+                carId: uuid,
+                employeeId: Number(event.target[3].value),
+                customerId: Number(event.target[2].value),
+                startDate: event.target[0].value,
+                endDate: event.target[1].value,
             }),
-            headers: { 'Content-Type': 'application/json' 
-            ,"Authorization" : `Bearer ${prepareToken()}`}
+            headers: {
+                'Content-Type': 'application/json'
+                , "Authorization": `Bearer ${prepareToken()}`
+            }
+        })
+            .then(() => { if (refTable.current) refTable.current.updateTable() })
+
+        handleClose();
+    }
+
+    const handleReturn = (event) => {
+        event.preventDefault()
+
+        fetch(Url + 'cars/' + uuid + '/return', {
+            method: 'POST',
+            body: JSON.stringify({
+                status: event.target[0].value,
+                mileage: Number(event.target[1].value),
+                notes: event.target[2].value,
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+                , "Authorization": `Bearer ${prepareToken()}`
+            }
         })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
@@ -291,14 +366,14 @@ export default () => {
     }
 
     function deleteCar(uuid, url) {
-        axios.delete(url + 'cars/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
+        axios.delete(url + 'cars/' + uuid, { headers: { "Authorization": `Bearer ${prepareToken()}` } })
             .then(() => { if (refTable.current) refTable.current.updateTable() })
 
         handleClose();
     }
 
     function getCar(uuid) {
-        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars/' + uuid, { headers: {"Authorization" : `Bearer ${prepareToken()}`} })
+        axios.get('http://localhost:8080/gra-service-1.0-SNAPSHOT/api/cars/' + uuid, { headers: { "Authorization": `Bearer ${prepareToken()}` } })
             .then((response) => {
                 setCarInfo(response.data);
             })
@@ -306,6 +381,64 @@ export default () => {
 
     return (
         <>
+            {/*Returning a car - modal*/}
+
+            <Modal
+                size="lg"
+                centered
+                show={showReturn}
+                onHide={handleClose}
+                onSubmit={handleReturn}
+            >
+                <Modal.Header>
+                    <Modal.Title className="h6">Return car</Modal.Title>
+                    <Button variant="close" aria-label="Close" onClick={handleClose} />
+                </Modal.Header>
+                <Modal.Body>
+                    <Card border="light" className="bg-white shadow-sm mb-4">
+                        <Card.Body>
+                            <h5 className="mb-4">Return information</h5>
+                            <Form>
+                                <Row>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Select car's status</Form.Label>
+                                        <Form.Select id="carClass" defaultValue={carInfo?.status || "available"}>
+                                            <option value="available">Available</option>
+                                            <option value="renovation">Renovation</option>
+                                        </Form.Select>
+                                    </Col>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Mileage</Form.Label>
+                                        <Form.Group className="mb-3">
+                                            <Form.Control required type="text" placeholder="e.g. 250000 km" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6} className="mb-2">
+                                        <Form.Label>Notes</Form.Label>
+                                        <Form.Group className="mb-3">
+                                            <Form.Control required type="text" placeholder="Enter car's notes" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Button variant="warning" type="submit">
+                                        Return
+                                    </Button>
+                                </Row>
+                            </Form>
+                        </Card.Body>
+                    </Card >
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="link" className="text-gray ms-auto" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
             {/*Renting a car - modal*/}
 
             <Modal
@@ -339,54 +472,28 @@ export default () => {
                                     <Col md={6} className="mb-3">
                                         <Form.Label>Date from</Form.Label>
                                         <Form.Group className="mb-3">
-                                            <Datetime
-                                                timeFormat={false}
-                                                closeOnSelect={false}
-                                                renderInput={(props, openCalendar) => (
-                                                    <InputGroup>
-                                                        <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
-                                                        <Form.Control
-                                                            required
-                                                            type="text"
-                                                            value={""}
-                                                            placeholder="mm/dd/yyyy"
-                                                            onFocus={openCalendar}
-                                                            onChange={() => { }} />
-                                                    </InputGroup>
-                                                )} />
+                                            <Form.Control required type="text" placeholder="yyyy-mm-dd" />
                                         </Form.Group>
                                     </Col>
                                     <Col md={6} className="mb-3">
                                         <Form.Label>Date to</Form.Label>
                                         <Form.Group className="mb-3">
-                                            <Datetime
-                                                timeFormat={false}
-                                                closeOnSelect={false}
-                                                renderInput={(props, openCalendar) => (
-                                                    <InputGroup>
-                                                        <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
-                                                        <Form.Control
-                                                            required
-                                                            type="text"
-                                                            value={""}
-                                                            placeholder="mm/dd/yyyy"
-                                                            onFocus={openCalendar}
-                                                            onChange={() => { }} />
-                                                    </InputGroup>
-                                                )} />
+                                            <Form.Control required type="text" placeholder="yyyy-mm-dd" />
                                         </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6} className="mb-3">
-                                        <Form.Label>Customer</Form.Label>
+                                        <Form.Label>Employee ID</Form.Label>
                                         <Form.Group className="mb-3">
-                                            PICKER
+                                            <Form.Control required type="text" placeholder="Enter employee's id" />
                                         </Form.Group>
                                     </Col>
                                     <Col md={6} className="mb-3">
-                                        <Form.Label>Final price</Form.Label>
-                                        <p>100$</p>
+                                        <Form.Label>Customer ID</Form.Label>
+                                        <Form.Group className="mb-3">
+                                            <Form.Control required type="text" placeholder="Enter car renter's id" />
+                                        </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -702,7 +809,7 @@ export default () => {
                     <span>New</span>
                 </Button>
             </div>
-            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openRent={(uuid) => { setShowRent(true); setUuid(uuid); getCar(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid); getCar(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCar(uuid) }} ref={refTable} />
+            <CarsTableBoot openDelete={(uuid) => { setShowDelete(true); setUuid(uuid) }} openRent={(uuid) => { setShowRent(true); setUuid(uuid); getCar(uuid) }} openEdit={(uuid) => { setShowEdit(true); setUuid(uuid); getCar(uuid) }} openDetails={(uuid) => { setShowDetails(true); setUuid(uuid); getCar(uuid) }} openReturn={(uuid) => { setShowReturn(true); setUuid(uuid) }} ref={refTable} />
         </>
     )
 }
