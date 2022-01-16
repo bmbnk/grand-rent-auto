@@ -3,6 +3,7 @@ package com.example.graservice.resources;
 import com.example.graservice.entities.CarsEntity;
 import com.example.graservice.services.CarsService;
 import com.example.graservice.services.RentalsService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;

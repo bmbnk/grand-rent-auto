@@ -1,6 +1,7 @@
 package com.example.graservice.resources;
 
 import com.example.graservice.services.RentalsService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonObject;

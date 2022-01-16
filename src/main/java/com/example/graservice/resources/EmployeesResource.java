@@ -2,6 +2,7 @@ package com.example.graservice.resources;
 
 import com.example.graservice.dtos.EmployeeDTO;
 import com.example.graservice.services.EmpolyeesService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
