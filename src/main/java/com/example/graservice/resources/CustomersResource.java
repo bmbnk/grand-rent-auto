@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 
 
 @RequestScoped
+@PermitAll
 @Path("/customers")
 public class CustomersResource {
 

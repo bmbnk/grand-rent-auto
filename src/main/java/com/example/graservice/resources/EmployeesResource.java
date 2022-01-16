@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @RequestScoped
+@PermitAll
 @Path("/employees")
 public class EmployeesResource {
 
@@ -41,7 +42,6 @@ public class EmployeesResource {
                 .build();
     }
 
-    @RolesAllowed("ADMIN")
     @DELETE
     @Path("/{id}")
     public Response removeEmployeeById(@PathParam("id") int id) {
@@ -56,7 +56,6 @@ public class EmployeesResource {
                 .build();
     }
 
-    @RolesAllowed("ADMIN")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,7 +72,6 @@ public class EmployeesResource {
                 .build();
     }
 
-    @RolesAllowed("ADMIN")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

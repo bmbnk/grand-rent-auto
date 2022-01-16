@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @RequestScoped
+@PermitAll
 @Path("/cars")
 public class CarsResource {
 
@@ -43,7 +44,6 @@ public class CarsResource {
                 .build();
     }
 
-    @RolesAllowed("ADMIN")
     @DELETE
     @Path("/{id}")
     public Response removeCarById(@PathParam("id") int id) {
@@ -57,7 +57,6 @@ public class CarsResource {
                 .build();
     }
 
-    @RolesAllowed("ADMIN")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -95,7 +94,6 @@ public class CarsResource {
                 .build();
     }
 
-    @RolesAllowed("ADMIN")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
