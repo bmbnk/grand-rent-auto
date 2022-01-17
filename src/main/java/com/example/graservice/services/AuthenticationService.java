@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// Service responsible for authentication actions
 @ApplicationScoped
 public class AuthenticationService {
 
@@ -23,7 +25,8 @@ public class AuthenticationService {
     @Inject
     private SecretService secretService;
 
-
+    // method returns user based on the email and the password if exists
+    // and password is correct for the provided email
     public EmployeesEntity validateCredentials(String email, String password) {
         EmployeesEntity employee = (EmployeesEntity)entityManager.createQuery("select e from EmployeesEntity e where e.eMail = \'" + email + "\'").getSingleResult();
 
@@ -33,6 +36,7 @@ public class AuthenticationService {
 
     }
 
+    // method creates jwt token
     public String createToken(int id, String userName, Boolean isAdmin) {
         return Jwts.builder()
                 .setSubject(userName)
@@ -44,6 +48,7 @@ public class AuthenticationService {
                 .compact();
     }
 
+    // method creates hash and salt values for the given password
     public Map<String, String> hashPassword(String password) {
         Map<String, String> passwordComponents = new HashMap<>();
         String salt = RandomStringUtils.randomAlphabetic(64);;

@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
+// Class with REST API endpoint for the authentication purposes
 @RequestScoped
 @Path("/auth")
 public class AuthenticationResource {
@@ -20,6 +21,8 @@ public class AuthenticationResource {
     @Inject
     private AuthenticationService authenticationService;
 
+    // Method used to handle authentication endpoint requests
+    // It returns jwt token if provided credentials are valid
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,22 +36,6 @@ public class AuthenticationResource {
                     .add("jwt", token)
                     .build();
             return Response.ok(jsonToken).build();
-        }
-        return Response.status(Response.Status.UNAUTHORIZED).build();
-    }
-
-    // TODO: Delete this after it is tested
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @PermitAll
-    @Path("/test")
-    public Response authenticateTest(JsonObject credentials) {
-        EmployeesEntity user = authenticationService.validateCredentials(credentials.getString("email"), credentials.getString("password"));
-        if (user != null) {
-            String userName = user.getFirstName().concat(" ".concat(user.getLastName()));
-            String token = authenticationService.createToken(user.getId(), userName, user.isAdmin());
-            return Response.ok(token).build();
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }

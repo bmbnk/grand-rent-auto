@@ -7,7 +7,8 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
 
-
+// Filter used to add "Access-Control-Allow-Origin: *" header to every response
+// that is sent from the API
 @Provider
 public class CORSHeadersFilter implements ContainerResponseFilter {
     @Override

@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+// Filter used to wrap http requests with user authentication mechanism
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
@@ -37,6 +39,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Context
     private ResourceInfo resourceInfo;
 
+    // method is checking what annotations are present in the method and class
+    // that is handling a requests to a specified endpoint and based on that and the token
+    // which is present or not in the header of the request is deciding
+    // if the request is valid or not
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Method resourceMethod = resourceInfo.getResourceMethod();
@@ -97,6 +103,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
+    // helper method used to get permission annotation class based on provided method and class
+    // assuming that method annotation has higher priority than class annotations
     private Annotation getPermissionAnnotationClass(Method resourceMethod,
                                                                   Class resourceClass) {
         List<Class> annotationClasses = Arrays.asList(DenyAll.class, RolesAllowed.class, PermitAll.class);
@@ -121,6 +129,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         return null;
     }
 
+    // helper method used to get specified annotation from the list if the annotation exists
     private Annotation getAnnotation(List<Annotation> annotations, Class annotationType) {
         List <Annotation> resultAnnotations = annotations.stream()
                 .filter(annotation -> annotation.annotationType() == annotationType)

@@ -2,6 +2,7 @@ package com.example.graservice.entities;
 
 import jakarta.persistence.*;
 
+// Interface for customers and employees users
 public interface IUser {
     int getId();
 

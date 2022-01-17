@@ -3,6 +3,7 @@ package com.example.graservice.entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+// ORM Layer class representing the rentals table entry
 @Entity
 @Table(name = "rentals", schema = "gra", catalog = "")
 public class RentalsEntity {

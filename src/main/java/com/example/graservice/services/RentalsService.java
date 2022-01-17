@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
 
+// Service responsible for making CRUD actions on the table Rentals
+// in the application's database
 @ApplicationScoped
 @Transactional
 public class RentalsService {
@@ -21,10 +23,12 @@ public class RentalsService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    // method returns rental with specified Id from the Rentals table in the database
     public RentalsEntity getRentalById(int id) {
         return entityManager.find(RentalsEntity.class, id);
     }
 
+    // method checks if the json object data is valid for adding a new rental
     public String validatePostRequest(JsonObject rentalData) {
         String errorMessage = "";
 
@@ -57,6 +61,8 @@ public class RentalsService {
         return errorMessage;
     }
 
+    // method creates a new rental based on the json object
+    // and adds it to the Rentals table in the database
     public RentalsEntity addRental(JsonObject rentalData) {
         int carId = rentalData.getInt("carId");
         int employeeId = rentalData.getInt("employeeId");
@@ -79,6 +85,8 @@ public class RentalsService {
         return rental;
     }
 
+    // method sets archived field of the rental if exists to true
+    // and saves changes in the Rentals table in the database
     public boolean archiveRentalById(Integer rentId) {
         RentalsEntity rental = getRentalById(rentId);
         if (rental != null) {

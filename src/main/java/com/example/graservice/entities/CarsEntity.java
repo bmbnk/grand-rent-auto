@@ -3,6 +3,8 @@ package com.example.graservice.entities;
 import com.example.graservice.enums.*;
 import jakarta.persistence.*;
 
+
+// ORM Layer class representing the cars table entry
 @Entity
 @Table(name = "cars", schema = "gra", catalog = "")
 public class CarsEntity {

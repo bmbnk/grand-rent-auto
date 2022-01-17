@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
+// Service responsible for making CRUD actions on the table Cars
+// in the application's database
 @ApplicationScoped
 @Transactional
 public class CarsService {
@@ -18,14 +20,17 @@ public class CarsService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    // method returns all cars from the Cars table in the database
     public List<CarsEntity> getAllCars() {
         return entityManager.createQuery("SELECT c FROM CarsEntity c").getResultList();
     }
 
+    // method returns car with specified Id from the Cars table in the database
     public CarsEntity getCarById(int id) {
         return entityManager.find(CarsEntity.class, id);
     }
 
+    // method returns car's rental id based on car Id from the Cars table in the database
     public Integer getCarsRentalId(int carId) {
         try {
             int rentalId = (int)entityManager
@@ -37,6 +42,7 @@ public class CarsService {
         }
     }
 
+    // method removes the car with specified Id if exists from the Cars table in the database
     public boolean removeCarById(int id) {
         CarsEntity car = getCarById(id);
         if (car != null) {
@@ -46,11 +52,14 @@ public class CarsService {
         return false;
     }
 
+    // method adds specified car to the Cars table in the database
     public CarsEntity addCar(CarsEntity car) {
         entityManager.persist(car);
         return car;
     }
 
+    // method replaces specified car's fields with new ones from another car
+    // and applies the changes in the database
     public CarsEntity editCar(CarsEntity car, CarsEntity editedCar) {
         entityManager.detach(car);
         copyCarFields(car, editedCar);
@@ -58,6 +67,7 @@ public class CarsService {
         return car;
     }
 
+    // helper method used to copy fields values from one car entry to another
     private void copyCarFields(CarsEntity targetCar, CarsEntity car) {
         targetCar.setBrand(car.getBrand());
         targetCar.setModel(car.getModel());
@@ -69,6 +79,8 @@ public class CarsService {
         targetCar.setEngineType(car.getEngineType());
     }
 
+    // method updates returned car fields "mileage", "status" and "notes"
+    // with the ones that are provided in json object
     public CarsEntity updateReturnedCar(int carId, JsonObject carUpdateData) {
         CarsEntity car = getCarById(carId);
         entityManager.detach(car);
@@ -81,6 +93,7 @@ public class CarsService {
         return car;
     }
 
+    // method checks if the json object data is valid for updating returned car
     public String validateReturnedCarUpdateData(JsonObject carUpdateData) {
         String errorMessage = "";
 

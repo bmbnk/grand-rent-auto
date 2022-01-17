@@ -2,6 +2,7 @@ package com.example.graservice.entities;
 
 import jakarta.persistence.*;
 
+// ORM Layer class representing the employees table entry
 @Entity
 @Table(name = "employees", schema = "gra", catalog = "")
 public class EmployeesEntity implements IUser {

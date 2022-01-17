@@ -2,6 +2,8 @@ package com.example.graservice.dtos;
 
 import jakarta.json.bind.annotation.JsonbProperty;
 
+
+// Class used to present employee to the api user
 public class EmployeeDTO {
     private int employeesId;
     private String firstName;

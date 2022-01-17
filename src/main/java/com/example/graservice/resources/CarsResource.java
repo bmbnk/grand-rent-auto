@@ -11,6 +11,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+
+// Class with REST API endpoints for making CRUD actions on the table Cars
+// int the application's database
 @RequestScoped
 @Path("/cars")
 public class CarsResource {
@@ -20,6 +23,8 @@ public class CarsResource {
     @Inject
     private RentalsService rentalsService;
 
+    // Method returns all cars from the Cars table in the application's database
+    // in response to the GET request on the "/cars" endpoint
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCars() {
@@ -28,6 +33,9 @@ public class CarsResource {
                 .build();
     }
 
+    // Method returns car with specified id if exists from the Cars table
+    // in the application's database
+    // in response to the GET request on the "/cars/{id}" endpoint
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
@@ -43,6 +51,10 @@ public class CarsResource {
                 .build();
     }
 
+    // Method removes car with specified id if exists from the Cars table
+    // in the application's database
+    // in response to the DELETE request on the "/cars/{id}" endpoint
+    // if the request was sent with admin's jwt token
     @RolesAllowed("ADMIN")
     @DELETE
     @Path("/{id}")
@@ -57,6 +69,10 @@ public class CarsResource {
                 .build();
     }
 
+    // Method adds car to the Cars table
+    // in the application's database
+    // in response to the POST request on the "/cars" endpoint
+    // if the request was sent with admin's jwt token
     @RolesAllowed("ADMIN")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -69,6 +85,10 @@ public class CarsResource {
                 .build();
     }
 
+    // Method updates the car with specified id with data sent in json object
+    // if car exists from the Cars table
+    // in the application's database
+    // in response to the POST request on the "/cars/{id}/return" endpoint
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -95,6 +115,12 @@ public class CarsResource {
                 .build();
     }
 
+    // Method updates the car with specified id if exists
+    // with the data sent in json object
+    // and saves it in the Cars table
+    // in the application's database
+    // in response to the PUT request on the "/cars/{id}" endpoint
+    // if the request was sent with admin's jwt token
     @RolesAllowed("ADMIN")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)

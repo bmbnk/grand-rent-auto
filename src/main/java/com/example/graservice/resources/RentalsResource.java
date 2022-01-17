@@ -8,6 +8,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+
+// Class with REST API endpoint for adding new rental entry to the table Rentals
+// int the application's database
 @RequestScoped
 @Path("/rentals")
 public class RentalsResource {
@@ -15,6 +18,10 @@ public class RentalsResource {
     @Inject
     private RentalsService rentalsService;
 
+    // Method creates new rental based on data sent in json object
+    // and adds it to the Rentals table
+    // in the application's database
+    // in response to the POST request on the "/rentals" endpoint
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
