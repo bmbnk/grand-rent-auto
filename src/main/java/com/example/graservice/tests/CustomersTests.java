@@ -15,7 +15,7 @@ public class CustomersTests {
     int id;
 
     @Test
-    void a_testPOST() {
+    void test_01_POST() {
         JSONObject request = new JSONObject();
         request.put("eMail", "testPOST@test.pl");
         request.put("firstName", "testPOSTFirstName");
@@ -39,7 +39,7 @@ public class CustomersTests {
     }
 
     @Test
-    void b_testPUT() {
+    void test_02_PUT() {
 
         JSONObject request = new JSONObject();
         request.put("eMail", "test@test.pl");
@@ -59,7 +59,7 @@ public class CustomersTests {
     }
 
     @Test
-    void c_testGET() {
+    void test_03_GET() {
         given()
                 .get("http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/" + id)
                 .then()
@@ -72,7 +72,7 @@ public class CustomersTests {
     }
 
     @Test
-    void d_testDELETE() {
+    void test_04_DELETE() {
         when()
                 .delete("http://localhost:8080/gra-service-1.0-SNAPSHOT/api/customers/" + id)
         .then()
