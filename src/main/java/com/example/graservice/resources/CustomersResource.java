@@ -8,7 +8,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-
+// Class with REST API endpoints for making CRUD actions on the table Customers
+// int the application's database
 @RequestScoped
 @Path("/customers")
 public class CustomersResource {
@@ -24,6 +25,9 @@ public class CustomersResource {
                 .build();
     }
 
+    // Method returns customer with specified id if exists from the Customers table
+    // in the application's database
+    // in response to the GET request on the "/customers/{id}" endpoint
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
@@ -40,6 +44,9 @@ public class CustomersResource {
                 .build();
     }
 
+    // Method removes customer with specified id if exists from the Customers table
+    // in the application's database
+    // in response to the DELETE request on the "/customers/{id}" endpoint
     @DELETE
     @Path("/{id}")
     public Response removeCustomerById(@PathParam("id") int id) {
@@ -54,6 +61,9 @@ public class CustomersResource {
                 .build();
     }
 
+    // Method adds customer to the Customers table
+    // in the application's database
+    // in response to the POST request on the "/customers" endpoint
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +74,11 @@ public class CustomersResource {
                 .build();
     }
 
+    // Method updates the customer with specified id if exists
+    // with the data sent in json object
+    // and saves it in the Customers table
+    // in the application's database
+    // in response to the PUT request on the "/customers/{id}" endpoint
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

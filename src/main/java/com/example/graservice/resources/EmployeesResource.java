@@ -10,6 +10,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+// Class with REST API endpoints for making CRUD actions on the table Employees
+// int the application's database
 @RequestScoped
 @Path("/employees")
 public class EmployeesResource {
@@ -17,6 +19,8 @@ public class EmployeesResource {
     @Inject
     private EmpolyeesService empolyeesService;
 
+    // Method returns all employees from the Employees table in the application's database
+    // in response to the GET request on the "/employees" endpoint
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEmployees() {
@@ -25,6 +29,9 @@ public class EmployeesResource {
                 .build();
     }
 
+    // Method returns employee with specified id if exists from the Employees table
+    // in the application's database
+    // in response to the GET request on the "/employees/{id}" endpoint
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
@@ -41,6 +48,10 @@ public class EmployeesResource {
                 .build();
     }
 
+    // Method removes employee with specified id if exists from the Employees table
+    // in the application's database
+    // in response to the DELETE request on the "/employees/{id}" endpoint
+    // if the request was sent with admin's jwt token
     @RolesAllowed("ADMIN")
     @DELETE
     @Path("/{id}")
@@ -56,6 +67,10 @@ public class EmployeesResource {
                 .build();
     }
 
+    // Method adds employee to the Employees table
+    // in the application's database
+    // in response to the POST request on the "/employees" endpoint
+    // if the request was sent with admin's jwt token
     @RolesAllowed("ADMIN")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,6 +88,12 @@ public class EmployeesResource {
                 .build();
     }
 
+    // Method updates the employee with specified id if exists
+    // with the data sent in json object
+    // and saves it in the Employees table
+    // in the application's database
+    // in response to the PUT request on the "/employees/{id}" endpoint
+    // if the request was sent with admin's jwt token
     @RolesAllowed("ADMIN")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)

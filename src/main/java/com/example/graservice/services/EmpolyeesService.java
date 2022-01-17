@@ -15,6 +15,8 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
+// Service responsible for making CRUD actions on the table Employees
+// in the application's database
 @ApplicationScoped
 @Transactional
 public class EmpolyeesService {
@@ -28,6 +30,7 @@ public class EmpolyeesService {
     @Inject
     private AuthenticationService authenticationService;
 
+    // method returns all employees from the Employees table in the database
     public List<EmployeeDTO> getAllEmployees() {
         List<EmployeesEntity> entities = entityManager.createQuery("SELECT e FROM EmployeesEntity e").getResultList();
         return entities
@@ -36,10 +39,12 @@ public class EmpolyeesService {
                 .collect(toList());
     }
 
+    // method returns employee with specified Id from the Employees table in the database
     public EmployeeDTO getEmployeeById(int id) {
         return mapper.toDTO(entityManager.find(EmployeesEntity.class, id));
     }
 
+    // method removes the employee with specified Id if exists from the Employees table in the database
     public boolean removeEmployeeById(int id) {
         EmployeesEntity employee = entityManager.find(EmployeesEntity.class, id);
         if(employee != null) {
@@ -49,6 +54,7 @@ public class EmpolyeesService {
         return false;
     }
 
+    // method adds specified employee to the Employees table in the database
     public EmployeeDTO addEmployee(JsonObject employeeData) {
         String eMail = employeeData.getString("eMail");
         String password = employeeData.getString("password");
@@ -77,6 +83,8 @@ public class EmpolyeesService {
         return mapper.toDTO(employee);
     }
 
+    // method replaces specified employee's fields with new ones from another employee
+    // and applies the changes in the database
     public EmployeeDTO editEmployee(int emplooyeesId, EmployeeDTO editedEmployee) {
         EmployeesEntity employee = entityManager.find(EmployeesEntity.class, emplooyeesId);
         if (employee != null) {
@@ -88,6 +96,7 @@ public class EmpolyeesService {
         return null;
     }
 
+    // helper method used to copy fields values from one employee entry to another
     private void copyEmployeeDTOFields(EmployeesEntity targetEmployee, EmployeeDTO employee) {
         targetEmployee.setFirstName(employee.getFirstName());
         targetEmployee.setLastName(employee.getLastName());
@@ -96,6 +105,7 @@ public class EmpolyeesService {
         targetEmployee.setAdmin(employee.isAdmin());
     }
 
+    // method checks if the json object data is valid for adding a new employee
     public String validatePostRequest(JsonObject customerData) {
         String errorMessage = "";
 
