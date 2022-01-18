@@ -77,6 +77,8 @@ public class CarsService {
         targetCar.setStatus(car.getStatus());
         targetCar.setCarClass(car.getCarClass());
         targetCar.setEngineType(car.getEngineType());
+        targetCar.setPricePerDay(car.getPricePerDay());
+        targetCar.setNotes(car.getNotes());
     }
 
     // method updates returned car fields "mileage", "status" and "notes"
