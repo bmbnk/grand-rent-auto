@@ -67,6 +67,8 @@ public class CarsService {
         targetCar.setStatus(car.getStatus());
         targetCar.setCarClass(car.getCarClass());
         targetCar.setEngineType(car.getEngineType());
+        targetCar.setPricePerDay(car.getPricePerDay());
+        targetCar.setNotes(car.getNotes());
     }
 
     public CarsEntity updateReturnedCar(int carId, JsonObject carUpdateData) {
